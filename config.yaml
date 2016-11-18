@@ -16,7 +16,7 @@ auth_api:
     secret: ILoveTheSecretStringIsIsGreatButNeedsToBeChangedFrienderino
 
 logging:
-  opentaxii: info
+  opentaxii: debug
   root: info
 
-hooks: misp_taxii_hooks.hooks.opentaxii.hooks
+hooks: misp_taxii_hooks.hooks
