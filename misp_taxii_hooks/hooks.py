@@ -37,7 +37,17 @@ def post_stix(manager, content_block, collection_ids, service_id):
 
     # Load the package
     package = pymisp.tools.stix.load_stix(f.name)
-    
+
+    # Check for duplicates
+    for attrib in package.attributes:
+        try:
+            if (0 != len(MISP.search_index(attrib.value)["response"])):
+                # It's a dupe! 
+                package.attributes.remove(attrib)        
+        except:
+            # idk, this is just in case pymisp does a weird
+            pass
+
     # Delete that old temporary file
     os.unlink(f.name)
 
