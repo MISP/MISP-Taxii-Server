@@ -5,18 +5,18 @@ support_basic_auth: yes
 persistence_api:
   class: opentaxii.persistence.sqldb.SQLDatabaseAPI
   parameters:
-    db_connection: mysql://root:root@localhost/taxiipersist
+    db_connection: mysql://taxii:some_password@localhost/taxiipersist
     create_tables: yes
 
 auth_api:
   class: opentaxii.auth.sqldb.SQLDatabaseAPI
   parameters:
-    db_connection: mysql://root:root@localhost/taxiiauth
+    db_connection: mysql://taxii:some_password@localhost/taxiiauth
     create_tables: yes
     secret: ILoveTheSecretStringIsIsGreatButNeedsToBeChangedFrienderino
 
 logging:
-  opentaxii: debug
+  opentaxii: info
   root: info
 
 hooks: misp_taxii_hooks.hooks
