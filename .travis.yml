@@ -11,9 +11,7 @@ services:
     - mysql
 
 env:
-    - OPENTAXII_CONFIG=$TRAVIS_BUILD_DIR/config.yaml 
-    - URL="http://ec2-52-42-201-6.us-west-2.compute.amazonaws.com"
-    - APIKEY=Vjy0ra7wO6w6si7hbjxX52nARfVpaAO6Tm6lxeSm
+    - OPENTAXII_CONFIG=$TRAVIS_BUILD_DIR/config.yaml URL="http://ec2-52-42-201-6.us-west-2.compute.amazonaws.com" APIKEY=Vjy0ra7wO6w6si7hbjxX52nARfVpaAO6Tm6lxeSm
 
 install:
     # Set up the deps
