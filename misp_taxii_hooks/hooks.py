@@ -54,7 +54,8 @@ def post_stix(manager, content_block, collection_ids, service_id):
     # Push the event to MISP
     # TODO: There's probably a proper method to do this rather than json_full
     # But I don't wanna read docs
-    MISP.add_event(package._json_full())
+    if (len(package.attributes) > 0):
+        MISP.add_event(package._json_full())
 
 # Make TAXII call our push function whenever it gets new data
 CONTENT_BLOCK_CREATED.connect(post_stix)
