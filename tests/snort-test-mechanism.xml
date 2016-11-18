@@ -1,0 +1,68 @@
+<stix:STIX_Package
+	xmlns:example="http://example.com"
+	xmlns:et="http://stix.mitre.org/ExploitTarget-1"
+	xmlns:incident="http://stix.mitre.org/Incident-1"
+	xmlns:indicator="http://stix.mitre.org/Indicator-2"
+	xmlns:ttp="http://stix.mitre.org/TTP-1"
+	xmlns:stixCommon="http://stix.mitre.org/common-1"
+	xmlns:stixVocabs="http://stix.mitre.org/default_vocabularies-1"
+	xmlns:snortTM="http://stix.mitre.org/extensions/TestMechanism#Snort-1"
+	xmlns:stix="http://stix.mitre.org/stix-1"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+
+	http://stix.mitre.org/ExploitTarget-1 http://stix.mitre.org/XMLSchema/exploit_target/1.2/exploit_target.xsd
+	http://stix.mitre.org/Incident-1 http://stix.mitre.org/XMLSchema/incident/1.2/incident.xsd
+	http://stix.mitre.org/Indicator-2 http://stix.mitre.org/XMLSchema/indicator/2.2/indicator.xsd
+	http://stix.mitre.org/TTP-1 http://stix.mitre.org/XMLSchema/ttp/1.2/ttp.xsd
+	http://stix.mitre.org/common-1 http://stix.mitre.org/XMLSchema/common/1.2/stix_common.xsd
+	http://stix.mitre.org/default_vocabularies-1 http://stix.mitre.org/XMLSchema/default_vocabularies/1.2.0/stix_default_vocabularies.xsd
+	http://stix.mitre.org/extensions/TestMechanism#Snort-1 http://stix.mitre.org/XMLSchema/extensions/test_mechanism/snort/1.2/snort_test_mechanism.xsd
+	http://stix.mitre.org/stix-1 http://stix.mitre.org/XMLSchema/core/1.2/stix_core.xsd" id="example:Package-ea99d4d4-1ae7-4120-9ebe-67ed4783fb36" version="1.2" >
+    <stix:Indicators>
+        <stix:Indicator id="example:indicator-567b201c-4fd5-4bde-a5db-42abc340807a" timestamp="2014-06-20T15:16:56.987616+00:00" xsi:type='indicator:IndicatorType' negate="false" version="2.1.1">
+            <indicator:Title>Snort Signature for Heartbleed</indicator:Title>
+            <indicator:Indicated_TTP>
+                <stixCommon:TTP idref="example:ttp-8c12783d-3ebd-42bd-8dcd-e81dab56a47a" xsi:type='ttp:TTPType' version="1.2"/>
+            </indicator:Indicated_TTP>
+            <indicator:Test_Mechanisms>
+                <indicator:Test_Mechanism id="example:testmechanism-a1475567-50f7-4dae-b0d0-47c7ea8e79e1" xmlns:snortTM='http://stix.mitre.org/extensions/TestMechanism#Snort-1' xsi:type='snortTM:SnortTestMechanismType'>
+                    <indicator:Efficacy timestamp="2014-06-20T15:16:56.987966+00:00">
+                        <stixCommon:Value xsi:type="stixVocabs:HighMediumLowVocab-1.0">Low</stixCommon:Value>
+                    </indicator:Efficacy>
+                    <indicator:Producer>
+                        <stixCommon:Identity id="example:Identity-a0740d84-9fcd-44af-9033-94e76a53201e">
+                            <stixCommon:Name>FOX IT</stixCommon:Name>
+                        </stixCommon:Identity>
+                        <stixCommon:References>
+                            <stixCommon:Reference>http://blog.fox-it.com/2014/04/08/openssl-heartbleed-bug-live-blog/</stixCommon:Reference>
+                        </stixCommon:References>
+                    </indicator:Producer>
+                    <snortTM:Rule><![CDATA[alert tcp any any -> any any (msg:"FOX-SRT - Flowbit - TLS-SSL Client Hello"; flow:established; dsize:< 500; content:"|16 03|"; depth:2; byte_test:1, <=, 2, 3; byte_test:1, !=, 2, 1; content:"|01|"; offset:5; depth:1; content:"|03|"; offset:9; byte_test:1, <=, 3, 10; byte_test:1, !=, 2, 9; content:"|00 0f 00|"; flowbits:set,foxsslsession; flowbits:noalert; threshold:type limit, track by_src, count 1, seconds 60; reference:cve,2014-0160; classtype:bad-unknown; sid: 21001130; rev:9;)]]></snortTM:Rule>
+                    <snortTM:Rule><![CDATA[alert tcp any any -> any any (msg:"FOX-SRT - Suspicious - TLS-SSL Large Heartbeat Response"; flow:established; flowbits:isset,foxsslsession; content:"|18 03|"; depth: 2; byte_test:1, <=, 3, 2; byte_test:1, !=, 2, 1; byte_test:2, >, 200, 3; threshold:type limit, track by_src, count 1, seconds 600; reference:cve,2014-0160; classtype:bad-unknown; sid: 21001131; rev:5;)]]></snortTM:Rule>
+                </indicator:Test_Mechanism>
+            </indicator:Test_Mechanisms>
+            <indicator:Confidence timestamp="2014-06-20T15:16:56.987649+00:00">
+                <stixCommon:Value xsi:type="stixVocabs:HighMediumLowVocab-1.0">High</stixCommon:Value>
+            </indicator:Confidence>
+        </stix:Indicator>
+    </stix:Indicators>
+    <stix:TTPs>
+        <stix:TTP id="example:ttp-8c12783d-3ebd-42bd-8dcd-e81dab56a47a" timestamp="2014-06-20T15:16:56.986865+00:00" xsi:type='ttp:TTPType' version="1.2">
+            <ttp:Title>Generic Heartbleed Exploits</ttp:Title>
+            <ttp:Exploit_Targets>
+                <ttp:Exploit_Target>
+                    <stixCommon:Exploit_Target idref="example:et-e77c1e36-5b43-4c5c-b8cb-7b36035f2b90" xsi:type='et:ExploitTargetType' version="1.2"/>
+                </ttp:Exploit_Target>
+            </ttp:Exploit_Targets>
+        </stix:TTP>
+    </stix:TTPs>
+    <stix:Exploit_Targets>
+        <stixCommon:Exploit_Target id="example:et-e77c1e36-5b43-4c5c-b8cb-7b36035f2b90" timestamp="2014-06-20T15:16:56.986650+00:00" xsi:type='et:ExploitTargetType' version="1.2">
+            <et:Title>Heartbleed</et:Title>
+            <et:Vulnerability>
+                <et:CVE_ID>CVE-2013-3893</et:CVE_ID>
+            </et:Vulnerability>
+        </stixCommon:Exploit_Target>
+    </stix:Exploit_Targets>
+</stix:STIX_Package>

@@ -1,0 +1,56 @@
+<stix:STIX_Package 
+	xmlns:cyboxCommon="http://cybox.mitre.org/common-2"
+	xmlns:cybox="http://cybox.mitre.org/cybox-2"
+	xmlns:cyboxVocabs="http://cybox.mitre.org/default_vocabularies-2"
+	xmlns:AddressObj="http://cybox.mitre.org/objects#AddressObject-2"
+	xmlns:example="http://example.com"
+	xmlns:coa="http://stix.mitre.org/CourseOfAction-1"
+	xmlns:stixCommon="http://stix.mitre.org/common-1"
+	xmlns:stixVocabs="http://stix.mitre.org/default_vocabularies-1"
+	xmlns:stix="http://stix.mitre.org/stix-1"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+	http://cybox.mitre.org/common-2 http://cybox.mitre.org/XMLSchema/common/2.1/cybox_common.xsd
+	http://cybox.mitre.org/cybox-2 http://cybox.mitre.org/XMLSchema/core/2.1/cybox_core.xsd
+	http://cybox.mitre.org/default_vocabularies-2 http://cybox.mitre.org/XMLSchema/default_vocabularies/2.1/cybox_default_vocabularies.xsd
+	http://cybox.mitre.org/objects#AddressObject-2 http://cybox.mitre.org/XMLSchema/objects/Address/2.1/Address_Object.xsd
+	http://stix.mitre.org/CourseOfAction-1 http://stix.mitre.org/XMLSchema/course_of_action/1.2/course_of_action.xsd
+	http://stix.mitre.org/common-1 http://stix.mitre.org/XMLSchema/common/1.2/stix_common.xsd
+	http://stix.mitre.org/default_vocabularies-1 http://stix.mitre.org/XMLSchema/default_vocabularies/1.2.0/stix_default_vocabularies.xsd
+	http://stix.mitre.org/stix-1 http://stix.mitre.org/XMLSchema/core/1.2/stix_core.xsd" 
+	id="example:Package-495c4c04-b5d8-11e3-b7bb-000c29789db9" 
+	version="1.2">
+    <stix:Courses_Of_Action>
+        <stix:Course_Of_Action id="example:coa-495c9b28-b5d8-11e3-b7bb-000c29789db9" xsi:type='coa:CourseOfActionType' version="1.2">
+            <coa:Title>Block traffic to PIVY C2 Server (10.10.10.10)</coa:Title>
+            <coa:Stage xsi:type="stixVocabs:COAStageVocab-1.0">Response</coa:Stage>
+            <coa:Type xsi:type="stixVocabs:CourseOfActionTypeVocab-1.0">Perimeter Blocking</coa:Type>
+            <coa:Objective>
+                <coa:Description>Block communication between the PIVY agents and the C2 Server</coa:Description>
+                <coa:Applicability_Confidence>
+                    <stixCommon:Value xsi:type="stixVocabs:HighMediumLowVocab-1.0">High</stixCommon:Value>
+                </coa:Applicability_Confidence>
+            </coa:Objective>
+            <coa:Parameter_Observables cybox_major_version="2" cybox_minor_version="1" cybox_update_version="0">
+                <cybox:Observable id="example:Observable-356e3258-0979-48f6-9bcf-6823eecf9a7d">
+                    <cybox:Object id="example:Address-df3c710c-f05c-4edb-a753-de4862048950">
+                        <cybox:Properties xsi:type="AddressObj:AddressObjectType" category="ipv4-addr">
+                            <AddressObj:Address_Value>10.10.10.10</AddressObj:Address_Value>
+                        </cybox:Properties>
+                    </cybox:Object>
+                </cybox:Observable>
+            </coa:Parameter_Observables>
+            <coa:Impact>
+                <stixCommon:Value xsi:type="stixVocabs:HighMediumLowVocab-1.0">Low</stixCommon:Value>
+                <stixCommon:Description>This IP address is not used for legitimate hosting so there should be no operational impact.</stixCommon:Description>
+            </coa:Impact>
+            <coa:Cost>
+                <stixCommon:Value xsi:type="stixVocabs:HighMediumLowVocab-1.0">Low</stixCommon:Value>
+            </coa:Cost>
+            <coa:Efficacy>
+                <stixCommon:Value xsi:type="stixVocabs:HighMediumLowVocab-1.0">High</stixCommon:Value>
+            </coa:Efficacy>
+        </stix:Course_Of_Action>
+    </stix:Courses_Of_Action>
+</stix:STIX_Package>
+

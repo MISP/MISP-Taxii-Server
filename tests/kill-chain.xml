@@ -1,0 +1,45 @@
+<stix:STIX_Package
+        xmlns:cyboxCommon="http://cybox.mitre.org/common-2"
+        xmlns:cybox="http://cybox.mitre.org/cybox-2"
+        xmlns:cyboxVocabs="http://cybox.mitre.org/default_vocabularies-2"
+        xmlns:example="http://example.com"
+        xmlns:indicator="http://stix.mitre.org/Indicator-2"
+        xmlns:stixCommon="http://stix.mitre.org/common-1"
+        xmlns:stixVocabs="http://stix.mitre.org/default_vocabularies-1"
+        xmlns:stix="http://stix.mitre.org/stix-1"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://cybox.mitre.org/common-2 http://cybox.mitre.org/XMLSchema/common/2.1/cybox_common.xsd
+        http://cybox.mitre.org/cybox-2 http://cybox.mitre.org/XMLSchema/core/2.1/cybox_core.xsd
+        http://cybox.mitre.org/default_vocabularies-2 http://cybox.mitre.org/XMLSchema/default_vocabularies/2.1/cybox_default_vocabularies.xsd
+
+        http://stix.mitre.org/Indicator-2 http://stix.mitre.org/XMLSchema/indicator/2.2/indicator.xsd
+        http://stix.mitre.org/common-1 http://stix.mitre.org/XMLSchema/common/1.2/stix_common.xsd
+        http://stix.mitre.org/default_vocabularies-1 http://stix.mitre.org/XMLSchema/default_vocabularies/1.2.0/stix_default_vocabularies.xsd
+        http://stix.mitre.org/stix-1 http://stix.mitre.org/XMLSchema/core/1.2/stix_core.xsd" id="example:Package-91d9b5a2-b63b-431b-ab56-aba30ab36809" version="1.2">
+    <stix:Indicators>
+        <stix:Indicator id="example:indicator-f33c2b75-aa60-4ffb-9829-3746ef233311" timestamp="2014-10-21T21:10:09.423000+00:00" xsi:type='indicator:IndicatorType'>
+            <indicator:Kill_Chain_Phases>
+                <stixCommon:Kill_Chain_Phase/>
+                <stixCommon:Kill_Chain_Phase phase_id="stix:TTP-786ca8f9-2d9a-4213-b38e-399af4a2e5d6" kill_chain_id="stix:TTP-af3e707f-2fb9-49e5-8c37-14026ca0a5ff"/>
+            </indicator:Kill_Chain_Phases>
+        </stix:Indicator>
+    </stix:Indicators>
+    <stix:TTPs>
+        <stix:Kill_Chains>
+            <stixCommon:Kill_Chain id="stix:TTP-af3e707f-2fb9-49e5-8c37-14026ca0a5ff" definer="LMCO" name="LM Cyber Kill Chain">
+                <stixCommon:Kill_Chain_Phase ordinality="1" name="Reconnaissance" phase_id="stix:TTP-af1016d6-a744-4ed7-ac91-00fe2272185a"/>
+                <stixCommon:Kill_Chain_Phase ordinality="2" name="Weaponization" phase_id="stix:TTP-445b4827-3cca-42bd-8421-f2e947133c16"/>
+                <stixCommon:Kill_Chain_Phase ordinality="3" name="Delivery" phase_id="stix:TTP-79a0e041-9d5f-49bb-ada4-8322622b162d"/>
+                <stixCommon:Kill_Chain_Phase ordinality="4" name="Exploitation" phase_id="stix:TTP-f706e4e7-53d8-44ef-967f-81535c9db7d0"/>
+                <stixCommon:Kill_Chain_Phase ordinality="5" name="Installation" phase_id="stix:TTP-e1e4e3f7-be3b-4b39-b80a-a593cfd99a4f"/>
+                <stixCommon:Kill_Chain_Phase ordinality="6" name="Command and Control" phase_id="stix:TTP-d6dc32b9-2538-4951-8733-3cb9ef1daae2"/>
+                <stixCommon:Kill_Chain_Phase ordinality="7" name="Actions on Objectives" phase_id="stix:TTP-786ca8f9-2d9a-4213-b38e-399af4a2e5d6"/>
+            </stixCommon:Kill_Chain>
+            <stixCommon:Kill_Chain definer="Myself" name="Organization-specific Kill Chain">
+                <stixCommon:Kill_Chain_Phase name="Infect Machine"/>
+                <stixCommon:Kill_Chain_Phase name="Exfiltrate Data"/>
+            </stixCommon:Kill_Chain>
+        </stix:Kill_Chains>
+    </stix:TTPs>
+</stix:STIX_Package>

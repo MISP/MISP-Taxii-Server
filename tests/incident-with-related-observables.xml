@@ -1,0 +1,64 @@
+<stix:STIX_Package 
+	xmlns:cyboxCommon="http://cybox.mitre.org/common-2"
+	xmlns:cybox="http://cybox.mitre.org/cybox-2"
+	xmlns:cyboxVocabs="http://cybox.mitre.org/default_vocabularies-2"
+	xmlns:FileObj="http://cybox.mitre.org/objects#FileObject-2"
+	xmlns:example="http://example.com"
+	xmlns:incident="http://stix.mitre.org/Incident-1"
+	xmlns:stixCommon="http://stix.mitre.org/common-1"
+	xmlns:stixVocabs="http://stix.mitre.org/default_vocabularies-1"
+	xmlns:stix="http://stix.mitre.org/stix-1"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+	http://cybox.mitre.org/common-2 http://cybox.mitre.org/XMLSchema/common/2.1/cybox_common.xsd
+	http://cybox.mitre.org/cybox-2 http://cybox.mitre.org/XMLSchema/core/2.1/cybox_core.xsd
+	http://cybox.mitre.org/default_vocabularies-2 http://cybox.mitre.org/XMLSchema/default_vocabularies/2.1/cybox_default_vocabularies.xsd
+	http://cybox.mitre.org/objects#FileObject-2 http://cybox.mitre.org/XMLSchema/objects/File/2.1/File_Object.xsd
+
+	http://stix.mitre.org/Incident-1 http://stix.mitre.org/XMLSchema/incident/1.2/incident.xsd
+	http://stix.mitre.org/common-1 http://stix.mitre.org/XMLSchema/common/1.2/stix_common.xsd
+	http://stix.mitre.org/default_vocabularies-1 http://stix.mitre.org/XMLSchema/default_vocabularies/1.2.0/stix_default_vocabularies.xsd
+	http://stix.mitre.org/stix-1 http://stix.mitre.org/XMLSchema/core/1.2/stix_core.xsd" id="example:Package-035391ea-ef0d-48c9-ae9b-d50452fcb296" version="1.2">
+    <stix:Incidents>
+        <stix:Incident id="example:incident-84d86106-d801-489b-87b6-d56bac58e6c1" timestamp="2014-09-15T14:37:54.297669+00:00" xsi:type='incident:IncidentType' version="1.2">
+            <incident:Title>Malicious files detected</incident:Title>
+            <incident:Related_Observables>
+                <incident:Related_Observable>
+                    <stixCommon:Relationship>Malicious Artifact Detected</stixCommon:Relationship>
+                    <stixCommon:Observable id="example:Observable-0fd77202-c962-41c7-b90f-a906ab3b5392">
+                        <cybox:Object id="example:File-043d8340-0300-46ee-b3bd-27693c8f64b7">
+                            <cybox:Properties xsi:type="FileObj:FileObjectType">
+                                <FileObj:File_Name>readme.doc.exe</FileObj:File_Name>
+                                <FileObj:Size_In_Bytes>40891</FileObj:Size_In_Bytes>
+                                <FileObj:Hashes>
+                                    <cyboxCommon:Hash>
+                                        <cyboxCommon:Type xsi:type="cyboxVocabs:HashNameVocab-1.0">SHA256</cyboxCommon:Type>
+                                        <cyboxCommon:Simple_Hash_Value>e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855</cyboxCommon:Simple_Hash_Value>
+                                    </cyboxCommon:Hash>
+                                </FileObj:Hashes>
+                            </cybox:Properties>
+                        </cybox:Object>
+                    </stixCommon:Observable>
+                </incident:Related_Observable>
+                <incident:Related_Observable>
+                    <stixCommon:Relationship>Malicious Artifact Detected</stixCommon:Relationship>
+                    <stixCommon:Observable id="example:Observable-b74949f0-cf41-4094-9b80-240201a96b60">
+                        <cybox:Object id="example:File-bc006562-2330-4fd1-a938-8f975eefbc71">
+                            <cybox:Properties xsi:type="FileObj:FileObjectType">
+                                <FileObj:File_Name>readme.doc.exe</FileObj:File_Name>
+                                <FileObj:Size_In_Bytes>40891</FileObj:Size_In_Bytes>
+                                <FileObj:Hashes>
+                                    <cyboxCommon:Hash>
+                                        <cyboxCommon:Type xsi:type="cyboxVocabs:HashNameVocab-1.0">SHA256</cyboxCommon:Type>
+                                        <cyboxCommon:Simple_Hash_Value>d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592</cyboxCommon:Simple_Hash_Value>
+                                    </cyboxCommon:Hash>
+                                </FileObj:Hashes>
+                            </cybox:Properties>
+                        </cybox:Object>
+                    </stixCommon:Observable>
+                </incident:Related_Observable>
+            </incident:Related_Observables>
+        </stix:Incident>
+    </stix:Incidents>
+</stix:STIX_Package>
+

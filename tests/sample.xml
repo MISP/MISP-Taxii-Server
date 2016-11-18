@@ -1,0 +1,48 @@
+<stix:STIX_Package 
+	xmlns:cyboxCommon="http://cybox.mitre.org/common-2"
+	xmlns:example="http://example.com"
+	xmlns:incident="http://stix.mitre.org/Incident-1"
+	xmlns:stixCommon="http://stix.mitre.org/common-1"
+	xmlns:stixVocabs="http://stix.mitre.org/default_vocabularies-1"
+	xmlns:stix="http://stix.mitre.org/stix-1"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+	http://cybox.mitre.org/common-2 http://cybox.mitre.org/XMLSchema/common/2.1/cybox_common.xsd
+	http://stix.mitre.org/Incident-1 http://stix.mitre.org/XMLSchema/incident/1.2/incident.xsd
+	http://stix.mitre.org/common-1 http://stix.mitre.org/XMLSchema/common/1.2/stix_common.xsd
+	http://stix.mitre.org/default_vocabularies-1 http://stix.mitre.org/XMLSchema/default_vocabularies/1.2.0/stix_default_vocabularies.xsd
+	http://stix.mitre.org/stix-1 http://stix.mitre.org/XMLSchema/core/1.2/stix_core.xsd" id="example:Package-ec96d2a6-5a95-48f2-93c0-b3b2198633ca" version="1.2" >
+    <stix:Incidents>
+        <stix:Incident id="example:incident-8236b4a2-abe0-4b56-9347-288005c4bb92" timestamp="2014-11-18T23:40:08.061362+00:00" xsi:type='incident:IncidentType' version="1.2">
+            <incident:Title>Breach of Cyber Tech Dynamics</incident:Title>
+            <incident:Time>
+                <incident:Initial_Compromise precision="second">2012-01-30T00:00:00</incident:Initial_Compromise>
+                <incident:Incident_Discovery precision="second">2012-05-10T00:00:00</incident:Incident_Discovery>
+                <incident:Restoration_Achieved precision="second">2012-08-10T00:00:00</incident:Restoration_Achieved>
+                <incident:Incident_Reported precision="second">2012-12-10T00:00:00</incident:Incident_Reported>
+            </incident:Time>
+            <incident:Description>Intrusion into enterprise network</incident:Description>
+            <incident:Reporter>
+                <stixCommon:Description>The person who reported it</stixCommon:Description>
+                <stixCommon:Identity id="example:Identity-cd64aaa6-b1c0-4026-8ea1-14ff5a19e5fb">
+                    <stixCommon:Name>Sample Investigations, LLC</stixCommon:Name>
+                </stixCommon:Identity>
+                <stixCommon:Time>
+                    <cyboxCommon:Produced_Time>2014-03-11T00:00:00</cyboxCommon:Produced_Time>
+                </stixCommon:Time>
+            </incident:Reporter>
+            <incident:Victim id="example:Identity-dd8637b7-51b4-48f0-9e3c-a2b23b3a2dd7">
+                <stixCommon:Name>Cyber Tech Dynamics</stixCommon:Name>
+            </incident:Victim>
+            <incident:Impact_Assessment>
+                <incident:Effects>
+                    <incident:Effect xsi:type="stixVocabs:IncidentEffectVocab-1.0">Financial Loss</incident:Effect>
+                </incident:Effects>
+            </incident:Impact_Assessment>
+            <incident:Confidence timestamp="2014-11-18T23:40:08.061379+00:00">
+                <stixCommon:Value xsi:type="stixVocabs:HighMediumLowVocab-1.0">High</stixCommon:Value>
+            </incident:Confidence>
+        </stix:Incident>
+    </stix:Incidents>
+</stix:STIX_Package>
+

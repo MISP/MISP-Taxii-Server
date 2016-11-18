@@ -1,0 +1,128 @@
+<stix:STIX_Package
+	xmlns:cyboxCommon="http://cybox.mitre.org/common-2"
+	xmlns:example="http://example.com"
+	xmlns:incident="http://stix.mitre.org/Incident-1"
+	xmlns:indicator="http://stix.mitre.org/Indicator-2"
+	xmlns:ttp="http://stix.mitre.org/TTP-1"
+	xmlns:stixCommon="http://stix.mitre.org/common-1"
+	xmlns:stixVocabs="http://stix.mitre.org/default_vocabularies-1"
+	xmlns:stix-openioc="http://stix.mitre.org/extensions/TestMechanism#OpenIOC2010-1"
+	xmlns:stix="http://stix.mitre.org/stix-1"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+	http://cybox.mitre.org/common-2 http://cybox.mitre.org/XMLSchema/common/2.1/cybox_common.xsd
+	http://stix.mitre.org/Incident-1 http://stix.mitre.org/XMLSchema/incident/1.2/incident.xsd
+	http://stix.mitre.org/Indicator-2 http://stix.mitre.org/XMLSchema/indicator/2.2/indicator.xsd
+	http://stix.mitre.org/TTP-1 http://stix.mitre.org/XMLSchema/ttp/1.2/ttp.xsd
+	http://stix.mitre.org/common-1 http://stix.mitre.org/XMLSchema/common/1.2/stix_common.xsd
+	http://stix.mitre.org/default_vocabularies-1 http://stix.mitre.org/XMLSchema/default_vocabularies/1.2.0/stix_default_vocabularies.xsd
+	http://stix.mitre.org/extensions/TestMechanism#OpenIOC2010-1 http://stix.mitre.org/XMLSchema/extensions/test_mechanism/open_ioc_2010/1.2/open_ioc_2010_test_mechanism.xsd
+	http://stix.mitre.org/stix-1 http://stix.mitre.org/XMLSchema/core/1.2/stix_core.xsd" id="example:Package-6ed0af26-fcb9-49be-9014-f119770f267a" version="1.2" >
+    <stix:Indicators>
+        <stix:Indicator id="example:indicator-b92194e0-da61-4a32-9034-1148123b0f7a" timestamp="2014-06-20T20:53:08.440812+00:00" xsi:type='indicator:IndicatorType' negate="false" version="2.1.1">
+            <indicator:Title>Zeus</indicator:Title>
+            <indicator:Description>Finds Zeus variants, twexts, sdra64, ntos</indicator:Description>
+            <indicator:Indicated_TTP>
+                <stixCommon:TTP idref="example:ttp-27884a06-e75c-4f35-b58d-f8cf2722f7d3" xsi:type='ttp:TTPType' version="1.2"/>
+            </indicator:Indicated_TTP>
+            <indicator:Test_Mechanisms>
+                <indicator:Test_Mechanism id="example:testmechanism-c7f7dad4-4835-4105-8a53-72149f721ec0" xmlns:stix-openioc='http://stix.mitre.org/extensions/TestMechanism#OpenIOC2010-1' xsi:type='stix-openioc:OpenIOC2010TestMechanismType'>
+                  <indicator:Producer>
+                        <stixCommon:Identity id="example:Identity-1c06cffc-4c80-4005-8d82-075afea0ed41">
+                            <stixCommon:Name>Mandiant</stixCommon:Name>
+                        </stixCommon:Identity>
+                        <stixCommon:Time>
+                            <cyboxCommon:Produced_Time>2001-01-01T00:00:00</cyboxCommon:Produced_Time>
+                        </stixCommon:Time>
+                        <stixCommon:References>
+                            <stixCommon:Reference>http://openioc.org/iocs/6d2a1b03-b216-4cd8-9a9e-8827af6ebf93.ioc</stixCommon:Reference>
+                        </stixCommon:References>
+                    </indicator:Producer>
+                    <stix-openioc:ioc xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.mandiant.com/2010/ioc" xmlns:stix-openioc="http://stix.mitre.org/extensions/TestMechanism#OpenIOC2010-1" id="6d2a1b03-b216-4cd8-9a9e-8827af6ebf93" last-modified="2011-10-28T19:28:20">
+  <short_description>Zeus</short_description>
+  <description>Finds Zeus variants, twexts, sdra64, ntos</description>
+  <keywords/>
+  <authored_by>Mandiant</authored_by>
+  <authored_date>0001-01-01T00:00:00</authored_date>
+  <links/>
+  <definition>
+    <Indicator operator="OR" id="9c8df971-32a8-4ede-8a3a-c5cb2c1439c6">
+      <Indicator operator="AND" id="0781258f-6960-4da5-97a0-ec35fb403cac">
+        <IndicatorItem id="50455b63-35bf-4efa-9f06-aeba2980f80a" condition="contains">
+          <Context document="ProcessItem" search="ProcessItem/name" type="mir"/>
+          <Content type="string">winlogon.exe</Content>
+        </IndicatorItem>
+        <IndicatorItem id="b05d9b40-0528-461f-9721-e31d5651abdc" condition="contains">
+          <Context document="ProcessItem" search="ProcessItem/HandleList/Handle/Type" type="mir"/>
+          <Content type="string">File</Content>
+        </IndicatorItem>
+        <Indicator operator="OR" id="67505775-6577-43b2-bccd-74603223180a">
+          <IndicatorItem id="c5ae706f-c032-4da7-8acd-4523f1dae9f6" condition="contains">
+            <Context document="ProcessItem" search="ProcessItem/HandleList/Handle/Name" type="mir"/>
+            <Content type="string">system32\sdra64.exe</Content>
+          </IndicatorItem>
+          <IndicatorItem id="25ff12a7-665b-4e45-8b0f-6e5ca7b95801" condition="contains">
+            <Context document="ProcessItem" search="ProcessItem/HandleList/Handle/Name" type="mir"/>
+            <Content type="string">system32\twain_32\user.ds</Content>
+          </IndicatorItem>
+          <IndicatorItem id="fea11706-9ebe-469b-b30a-4047cfb7436b" condition="contains">
+            <Context document="ProcessItem" search="ProcessItem/HandleList/Handle/Type" type="mir"/>
+            <Content type="string">\WINDOWS\system32\twext.exe</Content>
+          </IndicatorItem>
+          <IndicatorItem id="94ac992c-8d6d-441f-bfc4-5235f9b09af8" condition="contains">
+            <Context document="ProcessItem" search="ProcessItem/HandleList/Handle/Name" type="mir"/>
+            <Content type="string">system32\twain32\local.ds</Content>
+          </IndicatorItem>
+          <IndicatorItem id="bc12f44e-7d93-47ea-9cc9-86a2beeaa04c" condition="contains">
+            <Context document="ProcessItem" search="ProcessItem/HandleList/Handle/Name" type="mir"/>
+            <Content type="string">system32\twext.exe</Content>
+          </IndicatorItem>
+          <IndicatorItem id="1c3f8902-d4e2-443a-a407-15be3951bef9" condition="contains">
+            <Context document="ProcessItem" search="ProcessItem/HandleList/Handle/Name" type="mir"/>
+            <Content type="string">system32\lowsec\user.ds</Content>
+          </IndicatorItem>
+          <IndicatorItem id="7fab12d1-67ed-4149-b46a-ec50fc622bee" condition="contains">
+            <Context document="ProcessItem" search="ProcessItem/HandleList/Handle/Name" type="mir"/>
+            <Content type="string">system32\lowsec\local.ds</Content>
+          </IndicatorItem>
+        </Indicator>
+      </Indicator>
+      <Indicator operator="AND" id="9f7a5703-8a26-45cf-b801-1c13f0f15d40">
+        <IndicatorItem id="cf77d82f-0ac9-4c81-af0b-d634f71525b5" condition="contains">
+          <Context document="ProcessItem" search="ProcessItem/HandleList/Handle/Type" type="mir"/>
+          <Content type="string">Mutant</Content>
+        </IndicatorItem>
+        <Indicator operator="OR" id="83f72cf7-6399-4620-b735-d08ce23ba517">
+          <IndicatorItem id="a1250d55-cd63-46cd-9436-e1741f5f42c7" condition="contains">
+            <Context document="ProcessItem" search="ProcessItem/HandleList/Handle/Name" type="mir"/>
+            <Content type="string">__SYSTEM__</Content>
+          </IndicatorItem>
+          <IndicatorItem id="e033b865-95ba-44ab-baa5-3b1e8e5f348c" condition="contains">
+            <Context document="ProcessItem" search="ProcessItem/HandleList/Handle/Name" type="mir"/>
+            <Content type="string">_AVIRA_</Content>
+          </IndicatorItem>
+        </Indicator>
+      </Indicator>
+    </Indicator>
+  </definition>
+</stix-openioc:ioc>
+                </indicator:Test_Mechanism>
+            </indicator:Test_Mechanisms>
+        </stix:Indicator>
+    </stix:Indicators>
+    <stix:TTPs>
+        <stix:TTP id="example:ttp-27884a06-e75c-4f35-b58d-f8cf2722f7d3" timestamp="2014-06-20T20:53:08.439607+00:00" xsi:type='ttp:TTPType' version="1.2">
+            <ttp:Title>Zeus</ttp:Title>
+            <ttp:Behavior>
+                <ttp:Malware>
+                    <ttp:Malware_Instance id="example:malware-19e1567c-a824-4af1-aeb2-0267ec934c53">
+                        <ttp:Name>Zeus</ttp:Name>
+                        <ttp:Name>twexts</ttp:Name>
+                        <ttp:Name>sdra64</ttp:Name>
+                        <ttp:Name>ntos</ttp:Name>
+                    </ttp:Malware_Instance>
+                </ttp:Malware>
+            </ttp:Behavior>
+        </stix:TTP>
+    </stix:TTPs>
+</stix:STIX_Package>

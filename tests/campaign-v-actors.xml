@@ -1,0 +1,47 @@
+<stix:STIX_Package 
+    xmlns:example="http://example.com"
+    xmlns:campaign="http://stix.mitre.org/Campaign-1"
+    xmlns:ttp="http://stix.mitre.org/TTP-1"
+    xmlns:ta="http://stix.mitre.org/ThreatActor-1"
+    xmlns:stixCommon="http://stix.mitre.org/common-1"
+    xmlns:stixVocabs="http://stix.mitre.org/default_vocabularies-1"
+    xmlns:stix="http://stix.mitre.org/stix-1"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+
+    http://stix.mitre.org/Campaign-1 http://stix.mitre.org/XMLSchema/campaign/1.2/campaign.xsd
+    http://stix.mitre.org/TTP-1 http://stix.mitre.org/XMLSchema/ttp/1.2/ttp.xsd
+    http://stix.mitre.org/ThreatActor-1 http://stix.mitre.org/XMLSchema/threat_actor/1.2/threat_actor.xsd
+    http://stix.mitre.org/common-1 http://stix.mitre.org/XMLSchema/common/1.2/stix_common.xsd
+    http://stix.mitre.org/default_vocabularies-1 http://stix.mitre.org/XMLSchema/default_vocabularies/1.2.0/stix_default_vocabularies.xsd
+    http://stix.mitre.org/stix-1 http://stix.mitre.org/XMLSchema/core/1.2/stix_core.xsd" id="example:Package-81810123-b298-40f6-a4e7-186efcd07670" version="1.2">
+
+    <stix:Campaigns>
+        <stix:Campaign id="example:Campaign-e5268b6e-4931-42f1-b379-87f48eb41b1e" timestamp="2014-08-08T15:50:10.983728+00:00" xsi:type='campaign:CampaignType' version="1.2">
+            <campaign:Title>Compromise of ATM Machines</campaign:Title>
+            <campaign:Related_TTPs>
+                <campaign:Related_TTP>
+                    <stixCommon:TTP id="example:ttp-2d1c6ab3-5e4e-48ac-a32b-f0c01c2836a8" timestamp="2014-08-08T15:50:10.983464+00:00" xsi:type='ttp:TTPType' version="1.2">
+                        <ttp:Title>Victim Targeting: Customer PII and Financial Data</ttp:Title>
+                        <ttp:Victim_Targeting>
+                            <ttp:Targeted_Information xsi:type="stixVocabs:InformationTypeVocab-1.0">Information Assets - Financial Data</ttp:Targeted_Information>
+                        </ttp:Victim_Targeting>
+                    </stixCommon:TTP>
+                </campaign:Related_TTP>
+            </campaign:Related_TTPs>
+            <campaign:Related_Incidents>
+                <campaign:Related_Incident><stixCommon:Incident idref="example:incident-229ab6ba-0eb2-415b-bdf2-079e6b42f51e"/></campaign:Related_Incident>
+                <campaign:Related_Incident><stixCommon:Incident idref="example:incident-517cf274-038d-4ed4-a3ec-3ac18ad9db8a"/></campaign:Related_Incident>
+                <campaign:Related_Incident><stixCommon:Incident idref="example:incident-7d8cf96f-91cb-42d0-a1e0-bfa38ea08621"/></campaign:Related_Incident>
+            </campaign:Related_Incidents>
+            <campaign:Attribution>
+                <campaign:Attributed_Threat_Actor>
+                    <stixCommon:Threat_Actor id="example:threatactor-56f3f0db-b5d5-431c-ae56-c18f02caf500" timestamp="2014-08-08T15:50:10.983629+00:00" xsi:type='ta:ThreatActorType' version="1.2">
+                    <ta:Title>People behind the intrusion</ta:Title>
+                </stixCommon:Threat_Actor>
+                </campaign:Attributed_Threat_Actor>
+            </campaign:Attribution>
+        </stix:Campaign>
+    </stix:Campaigns>
+</stix:STIX_Package>
+

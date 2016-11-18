@@ -1,0 +1,41 @@
+language: python
+
+python:
+    - "2.7"
+    - "3.5"
+    - "nightly"
+
+cache: pip
+
+services:
+    - mysql
+
+env:
+    - OPENTAXII_CONFIG=$TRAVIS_BUILD_DIR/config.yaml 
+    - URL="http://ec2-52-42-201-6.us-west-2.compute.amazonaws.com"
+    - APIKEY=Vjy0ra7wO6w6si7hbjxX52nARfVpaAO6Tm6lxeSm
+
+install:
+    # Set up the deps
+    - git submodule init 
+    - git submodule update
+    # Install OpenTAXII
+    - cd OpenTAXII
+    - python setup.py install
+    - cd ..
+    # Create databases
+    - mysql -u root -e 'create database taxiiauth; create database taxiipersist;'
+    - mysql -u root -e "grant all on taxiiauth.* to 'taxii'@'%' identified by 'some_password';"
+    - mysql -u root -e "grant all on taxiipersist.* to 'taxii'@'%' identified by 'some_password';"
+    # Populate databases
+    - opentaxii-create-services -c services.yaml
+    - opentaxii-create-collections -c collections.yaml
+    - opentaxii-create-acccount -u travis -p travis
+    #Configure hooks
+    - <misp_taxii_hooks/hooks.py sed 's@\[URL\]@'"$URL"'@; s@\[APIKEY\]@'"$APIKEY"'@' > misp_taxii_hooks/hooks.py
+    - python setup.py install
+
+script:
+    - cd tests
+    - nosetests .
+    - cd .. 
