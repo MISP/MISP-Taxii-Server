@@ -42,6 +42,7 @@ install:
 script:
     - opentaxii-run-dev &
     - pid=$!
+    - sleep 15
     - cd tests
     - nosetests .
     - cd .. 
