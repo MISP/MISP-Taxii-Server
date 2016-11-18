@@ -34,6 +34,9 @@ install:
     - python setup.py install
 
 script:
+    - opentaxii-run-dev &
+    - pid=$!
     - cd tests
     - nosetests .
     - cd .. 
+    - kill -s INT $pid
