@@ -35,7 +35,7 @@ install:
     # Populate databases
     - opentaxii-create-services -c services.yaml
     - opentaxii-create-collections -c collections.yaml
-    - opentaxii-create-acccount -u travis -p travis
+    - opentaxii-create-account -u travis -p travis
 script:
     - opentaxii-run-dev &
     - pid=$!
