@@ -17,6 +17,9 @@ install:
     # Set up the deps
     - git submodule init 
     - git submodule update
+    #Configure hooks
+    - <misp_taxii_hooks/hooks.py sed 's@\[URL\]@'"$URL"'@; s@\[APIKEY\]@'"$APIKEY"'@' > misp_taxii_hooks/hooks.py
+    - python setup.py install
     # Install OpenTAXII
     - cd OpenTAXII
     - python setup.py install
@@ -29,10 +32,6 @@ install:
     - opentaxii-create-services -c services.yaml
     - opentaxii-create-collections -c collections.yaml
     - opentaxii-create-acccount -u travis -p travis
-    #Configure hooks
-    - <misp_taxii_hooks/hooks.py sed 's@\[URL\]@'"$URL"'@; s@\[APIKEY\]@'"$APIKEY"'@' > misp_taxii_hooks/hooks.py
-    - python setup.py install
-
 script:
     - opentaxii-run-dev &
     - pid=$!
