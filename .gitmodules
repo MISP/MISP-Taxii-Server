@@ -1,0 +1,3 @@
+[submodule "OpenTAXII"]
+	path = OpenTAXII
+	url = https://github.com/EclecticIQ/OpenTAXII.git

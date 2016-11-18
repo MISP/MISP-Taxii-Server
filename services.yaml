@@ -1,0 +1,48 @@
+---
+
+- id: inbox
+  type: inbox
+  address: /services/inbox
+  description: Custom Inbox Service Description B
+  destination_collection_required: yes
+  accept_all_content: no
+  authentication_required: yes
+  supported_content:
+    - urn:stix.mitre.org:xml:1.1.1
+    - urn:stix.mitre.org:xml:1.2
+  protocol_bindings:
+    - urn:taxii.mitre.org:protocol:http:1.0
+    - urn:taxii.mitre.org:protocol:https:1.0
+
+- id: discovery
+  type: discovery
+  address: /services/discovery
+  description: Custom Discovery Service description
+  advertised_services:
+    - inbox
+    - discovery
+    - collection_management
+    - poll
+  protocol_bindings:
+    - urn:taxii.mitre.org:protocol:http:1.0
+    - urn:taxii.mitre.org:protocol:https:1.0
+
+- id: collection_management
+  type: collection_management
+  address: /services/collection-management
+  description: Custom Collection Management Service description
+  protocol_bindings:
+    - urn:taxii.mitre.org:protocol:http:1.0
+    - urn:taxii.mitre.org:protocol:https:1.0
+
+- id: poll
+  type: poll
+  address: /services/poll
+  description: Custom poll Service description
+  subscription_required: no
+  max_result_count: 100
+  max_result_size: 10
+  authentication_required: yes
+  protocol_bindings:
+    - urn:taxii.mitre.org:protocol:http:1.0
+
