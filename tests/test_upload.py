@@ -7,7 +7,7 @@ def test_push():
     for fname in glob.glob("*.xml"):
         proc = subprocess.Popen([
                         "taxii-push", 
-                        "--path", "http://localhost:9000/services/inbox", 
+                        "--path", "http://127.0.0.1:9000/services/inbox", 
                         "-f", fname, 
                         "--dest", "collection", 
                         "--username", "travis", 
@@ -18,5 +18,4 @@ def test_push():
                 )
 
         out,err = proc.communicate()
-        print(out)
-        assert("Content block successfully pushed" in out.decode("utf-8"))
+        assert("Content block successfully pushed" in err.decode("utf-8"))

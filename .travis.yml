@@ -1,11 +1,11 @@
+dist: trusty
+sudo: required
+
 language: python
 
 python:
-    - "2.7"
     - "3.5"
     - "nightly"
-
-cache: pip
 
 services:
     - mysql
@@ -13,12 +13,19 @@ services:
 env:
     - OPENTAXII_CONFIG=$TRAVIS_BUILD_DIR/config.yaml URL="http://ec2-52-42-201-6.us-west-2.compute.amazonaws.com" APIKEY=Vjy0ra7wO6w6si7hbjxX52nARfVpaAO6Tm6lxeSm
 
+before_install:
+    - sudo apt-get install mysql-server-5.6 mysql-client-core-5.6 mysql-client-5.6
+
 install:
+    # Check the config is ok
+    - echo $OPENTAXII_CONFIG
+    - mysql --version
     # Set up the deps
     - git submodule init 
     - git submodule update
     #Configure hooks
     - <misp_taxii_hooks/hooks.py sed 's@\[URL\]@'"$URL"'@; s@\[APIKEY\]@'"$APIKEY"'@' > misp_taxii_hooks/hooks.py
+    - head -n20 misp_taxii_hooks/hooks.py
     - python setup.py install
     # Install OpenTAXII
     - cd OpenTAXII
@@ -31,10 +38,11 @@ install:
     # Populate databases
     - opentaxii-create-services -c services.yaml
     - opentaxii-create-collections -c collections.yaml
-    - opentaxii-create-acccount -u travis -p travis
+    - opentaxii-create-account -u travis -p travis
 script:
     - opentaxii-run-dev &
     - pid=$!
+    - sleep 15
     - cd tests
     - nosetests .
     - cd .. 
