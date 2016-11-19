@@ -9,7 +9,7 @@ along with a callback for when data is sent to the TAXII Server's inbox.
 
 Download the repository with
 ```bash
-git clone --recursive https://github.com/FloatingGhost/MISP-Taxii-Server
+git clone --recursive https://github.com/MISP/MISP-Taxii-Server
 ```
 
 This will also download the OpenTAXII Server, which you should install with
