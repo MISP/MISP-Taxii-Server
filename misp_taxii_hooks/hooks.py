@@ -4,20 +4,36 @@
 # TODO: DETECT DUPLICATE DATA
 #####
 
+import os
 import pymisp
 import tempfile
-import os
+from pyaml import yaml
 
 from opentaxii.signals import (
     CONTENT_BLOCK_CREATED, INBOX_MESSAGE_CREATED
 )
 
 ## CONFIG
+if "MISP_TAXII_CONFIG" in os.environ:
+    print("Using config from {}".format(os.environ["MISP_TAXII_CONFIG"]))
+    CONFIG =  yaml.parse(open(os.environ["MISP_TAXII_CONFIG"], "r"))
+else:
+    print("Trying to use env variables...")
+    if "MISP_URL" in os.environ:
+        misp_url = os.environ["MISP_URL"]
+    else:
+        print("Unkown misp URL. Set MISP_TAXII_CONFIG or MISP_URL.")
+        misp_url = "UNKNOWN"
+    if "MISP_API" in os.environ:
+        misp_api = os.environ["MISP_API"]
+    else:
+        print("Unknown misp API key. Set MISP_TAXII_CONFIG or MISP_API.")
+        misp_api = "UNKNOWN"
 
-CONFIG = {
-            "MISP_URL" : "[URL]",
-            "MISP_API" : "[APIKEY]",
-        }
+    CONFIG = {
+            "MISP_URL" : misp_url,
+            "MISP_API" : misp_api,
+            }
 
 MISP = pymisp.PyMISP( 
                         CONFIG["MISP_URL"],
@@ -31,12 +47,12 @@ def post_stix(manager, content_block, collection_ids, service_id):
     '''
 
     # Create a temporary file to load STIX data from
-    f = tempfile.NamedTemporaryFile(delete=False, mode="w")
+    f = tempfile.SpooledTemporaryFile(max_size=10*1024, mode="w")
     f.write(content_block.content)
-    f.close()
+    f.seek(0)
 
     # Load the package
-    package = pymisp.tools.stix.load_stix(f.name)
+    package = pymisp.tools.stix.load_stix(f)
 
     # Check for duplicates
     for attrib in package.attributes:
@@ -47,9 +63,6 @@ def post_stix(manager, content_block, collection_ids, service_id):
         except:
             # idk, this is just in case pymisp does a weird
             pass
-
-    # Delete that old temporary file
-    os.unlink(f.name)
 
     # Push the event to MISP
     # TODO: There's probably a proper method to do this rather than json_full

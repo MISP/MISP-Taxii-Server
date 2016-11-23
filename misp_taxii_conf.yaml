@@ -1,0 +1,10 @@
+# Sample configuration for misp_taxii_server
+
+zmq:
+    host: localhost
+    port: 50000
+
+taxii:
+    host: localhost
+    port: 9000
+    inbox: inbox
