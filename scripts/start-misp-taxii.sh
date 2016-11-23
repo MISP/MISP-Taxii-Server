@@ -9,3 +9,5 @@ if [ -z $MISP_TAXII_CONFIG]
     then
         echo "Warning: Variable MISP_TAXII_CONFIG not set!";
 fi
+
+

@@ -14,30 +14,32 @@ from opentaxii.signals import (
 )
 
 ## CONFIG
-if "MISP_TAXII_CONFIG" in os.environ:
-    print("Using config from {}".format(os.environ["MISP_TAXII_CONFIG"]))
-    CONFIG =  yaml.parse(open(os.environ["MISP_TAXII_CONFIG"], "r"))
+if "OPENTAXII_CONFIG" in os.environ:
+    print("Using config from {}".format(os.environ["OPENTAXII_CONFIG"]))
+    CONFIG =  yaml.load(open(os.environ["OPENTAXII_CONFIG"], "r"))
 else:
     print("Trying to use env variables...")
     if "MISP_URL" in os.environ:
         misp_url = os.environ["MISP_URL"]
     else:
-        print("Unkown misp URL. Set MISP_TAXII_CONFIG or MISP_URL.")
+        print("Unkown misp URL. Set OPENTAXII_CONFIG or MISP_URL.")
         misp_url = "UNKNOWN"
     if "MISP_API" in os.environ:
         misp_api = os.environ["MISP_API"]
     else:
-        print("Unknown misp API key. Set MISP_TAXII_CONFIG or MISP_API.")
+        print("Unknown misp API key. Set OPENTAXII_CONFIG or MISP_API.")
         misp_api = "UNKNOWN"
 
     CONFIG = {
-            "MISP_URL" : misp_url,
-            "MISP_API" : misp_api,
+                "misp" : {
+                            "url" : misp_url,
+                            "api" : misp_api
+                        }
             }
 
 MISP = pymisp.PyMISP( 
-                        CONFIG["MISP_URL"],
-                        CONFIG["MISP_API"],
+                        CONFIG["misp"]["url"],
+                        CONFIG["misp"]["api"],
                 )
 
 def post_stix(manager, content_block, collection_ids, service_id):
@@ -46,13 +48,8 @@ def post_stix(manager, content_block, collection_ids, service_id):
         Will convert it to a MISPEvent and push to the server
     '''
 
-    # Create a temporary file to load STIX data from
-    f = tempfile.SpooledTemporaryFile(max_size=10*1024, mode="w")
-    f.write(content_block.content)
-    f.seek(0)
-
     # Load the package
-    package = pymisp.tools.stix.load_stix(f)
+    package = pymisp.tools.stix.load_stix(content_block.content)
 
     # Check for duplicates
     for attrib in package.attributes:

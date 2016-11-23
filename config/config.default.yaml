@@ -20,3 +20,12 @@ logging:
   root: info
 
 hooks: misp_taxii_hooks.hooks
+# Sample configuration for misp_taxii_server
+
+zmq:
+    host: localhost
+    port: 50000
+
+misp:
+    url: "http://localhost"
+    api: KEY

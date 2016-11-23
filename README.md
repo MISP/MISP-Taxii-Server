@@ -47,10 +47,11 @@ Now it's time to create all your SQL tables. Luckily OpenTaxii comes with comman
 
 You're going to want to export your configuration file to a variable as well.
 ```bash
+# An example of this config is in the config directory
 export OPENTAXII_CONFIG=/path/to/config.yaml
 
-opentaxii-create-services -c services.yaml
-opentaxii-create-collections -c collections.yaml
+opentaxii-create-services -c config/services.yaml
+opentaxii-create-collections -c config/collections.yaml
 
 # Create a user account
 # Set the username and password to whatever you want
