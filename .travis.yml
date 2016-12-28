@@ -36,8 +36,8 @@ install:
     - mysql -u root -e "grant all on taxiiauth.* to 'taxii'@'%' identified by 'some_password';"
     - mysql -u root -e "grant all on taxiipersist.* to 'taxii'@'%' identified by 'some_password';"
     # Populate databases
-    - opentaxii-create-services -c services.yaml
-    - opentaxii-create-collections -c collections.yaml
+    - opentaxii-create-services -c config/services.yaml
+    - opentaxii-create-collections -c config/collections.yaml
     - opentaxii-create-account -u travis -p travis
 script:
     - opentaxii-run-dev &
