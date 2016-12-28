@@ -89,7 +89,8 @@ The client should say "Content Block Pushed Succesfully" if all went well.
 
 Now you have a TAXII server hooked up to MISP, you're able to send STIX files to the inbox and have them uploaded directly to MISP. So that's nice <3
 
+There is also an experimental feature to push MISP events to the TAXII server when they're published - that's in `scripts/push_published_to_taxii.py`. It seems to work, but may occasionally re-upload duplicate events to MISP.
+
 ## Planned features
 
 - Duplicate Detection
-- Possible sync misp -> Taxii 
