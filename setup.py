@@ -8,7 +8,7 @@ import os
 setup(
     name="misp_taxii_hooks",
     description="A little package just to install hooks to PYTHONPATH",
-    version="0.1",
+    version="0.2",
     author="Hannah Ward",
     author_email="hannah.ward2@baesystems.com",
     packages=['misp_taxii_hooks'],
