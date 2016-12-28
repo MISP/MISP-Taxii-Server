@@ -11,3 +11,5 @@ if [ -z $MISP_TAXII_CONFIG]
 fi
 
 
+echo "Running taxii..."
+opentaxii-run-dev 
