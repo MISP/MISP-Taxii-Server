@@ -1,0 +1,35 @@
+---
+domain: "localhost:9000"
+support_basic_auth: yes
+
+persistence_api:
+  class: opentaxii.persistence.sqldb.SQLDatabaseAPI
+  parameters:
+    db_connection: mysql://taxii:some_password@localhost/taxiipersist
+    create_tables: yes
+
+auth_api:
+  class: opentaxii.auth.sqldb.SQLDatabaseAPI
+  parameters:
+    db_connection: mysql://taxii:some_password@localhost/taxiiauth
+    create_tables: yes
+    secret: ILoveTheSecretStringIsIsGreatButNeedsToBeChangedFrienderino
+
+logging:
+  opentaxii: info
+  root: info
+
+hooks: misp_taxii_hooks.hooks
+# Sample configuration for misp_taxii_server
+
+zmq:
+    host: localhost
+    port: 50000
+
+taxii:
+    auth:
+        username: root
+        password: root
+misp:
+    url: "http://ec2-52-42-201-6.us-west-2.compute.amazonaws.com"
+    api: Vjy0ra7wO6w6si7hbjxX52nARfVpaAO6Tm6lxeSm
