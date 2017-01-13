@@ -11,7 +11,7 @@ services:
     - mysql
 
 env:
-    - OPENTAXII_CONFIG=$TRAVIS_BUILD_DIR/config/config.travis.yaml URL="http://ec2-35-167-39-27.us-west-2.compute.amazonaws.com" APIKEY=t2Q5tSiUz02lCK06oUS0ajy6QL1gBSldPpgKctwO
+    - OPENTAXII_CONFIG=$TRAVIS_BUILD_DIR/config/config.travis.yaml URL="http://35.163.95.230" APIKEY=pF4Rq3JOHbYAJLMiFDqRPpLxAh3s0PakiSPKWSN5
 
 before_install:
     - sudo apt-get install mysql-server-5.6 mysql-client-core-5.6 mysql-client-5.6
