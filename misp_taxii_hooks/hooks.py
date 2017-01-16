@@ -51,16 +51,6 @@ def post_stix(manager, content_block, collection_ids, service_id):
     # Load the package
     package = pymisp.tools.stix.load_stix(content_block.content)
 
-    # Check for duplicates
-    for attrib in package.attributes:
-        try:
-            if (0 != len(MISP.search_index(attrib.value)["response"])):
-                # It's a dupe! 
-                package.attributes.remove(attrib)        
-        except:
-            # idk, this is just in case pymisp does a weird
-            pass
-
     # Push the event to MISP
     # TODO: There's probably a proper method to do this rather than json_full
     # But I don't wanna read docs
