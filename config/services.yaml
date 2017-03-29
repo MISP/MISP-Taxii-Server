@@ -3,7 +3,7 @@
 - id: inbox
   type: inbox
   address: /services/inbox
-  description: Custom Inbox Service Description B
+  description: Inbox Service
   destination_collection_required: yes
   accept_all_content: no
   authentication_required: yes
@@ -17,7 +17,7 @@
 - id: discovery
   type: discovery
   address: /services/discovery
-  description: Custom Discovery Service description
+  description: Discovery Service
   advertised_services:
     - inbox
     - discovery
@@ -30,7 +30,7 @@
 - id: collection_management
   type: collection_management
   address: /services/collection-management
-  description: Custom Collection Management Service description
+  description: Collection Management Service
   protocol_bindings:
     - urn:taxii.mitre.org:protocol:http:1.0
     - urn:taxii.mitre.org:protocol:https:1.0
@@ -38,7 +38,7 @@
 - id: poll
   type: poll
   address: /services/poll
-  description: Custom poll Service description
+  description: Poll Service
   subscription_required: no
   max_result_count: 100
   max_result_size: 10
