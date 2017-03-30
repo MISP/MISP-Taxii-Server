@@ -16,7 +16,7 @@ cat >> $CONFIGDIR/servers.yml << EOF
 '$SNAME':
   host: localhost
   port: 9000
-  discovery_path: None
+  discovery_path: 
   use_https: False
   taxii_version: 1.1
-  headers: None
+  headers: 
