@@ -9,10 +9,26 @@ if [ ! -d $CONFIGDIR ]; then
     mkdir -p $CONFIGDIR;
 fi
 
+if [ ! -f $CONFIGDIR/local-server.yml ]; then
+    echo "Creating local server configuration at $CONFIGDIR"
+    cat >> $CONFIGDIR/local-server.yml << EOF
+host: localhost
+port: 9000
+discovery_path:
+use_https: False
+taxii_version: '1.1'
+headers:
+auth:
+  username:
+  password:
+collection:
+EOF
+fi
+
 echo "FRIENDLY SERVER NAME:"
 read SNAME
 
-cat >> $CONFIGDIR/servers.yml << EOF
+cat >> $CONFIGDIR/remote-servers.yml << EOF
 - name: '$SNAME'
   host: localhost
   port: 9000
@@ -27,4 +43,4 @@ cat >> $CONFIGDIR/servers.yml << EOF
     - collection
 EOF
 
-echo "New server added to $CONFIGDIR/servers.yml - please go change the settings"
+echo "New server added to $CONFIGDIR/remote-servers.yml - please go change the settings"
