@@ -23,6 +23,8 @@ cat >> $CONFIGDIR/servers.yml << EOF
   auth:
     username:
     password:
+  collections:
+    - collection
 EOF
 
 echo "New server added to $CONFIGDIR/servers.yml - please go change the settings"
