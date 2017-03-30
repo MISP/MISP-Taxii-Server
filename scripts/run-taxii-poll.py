@@ -58,6 +58,8 @@ except Exception as ex:
     log.fatal(ex)
     sys.exit(1)
 
+log.info("Connected")
+
 for server in config:
     log.info("== %s ==", server["name"])
     cli = create_client(host = server["host"],
