@@ -13,13 +13,16 @@ echo "FRIENDLY SERVER NAME:"
 read SNAME
 
 cat >> $CONFIGDIR/servers.yml << EOF
-- name: '$SNAME':
+- name: '$SNAME'
   host: localhost
   port: 9000
   discovery_path: 
   use_https: False
-  taxii_version: 1.1
+  taxii_version: '1.1'
   headers: 
+  auth:
+    username:
+    password:
 EOF
 
 echo "New server added to $CONFIGDIR/servers.yml - please go change the settings"
