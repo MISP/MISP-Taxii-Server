@@ -50,6 +50,10 @@ localClient = create_client(host = localConfig["host"],
 localClient.username = localConfig["auth"]["username"]
 localClient.password = localConfig["auth"]["password"]
 
+localInbox = "{}://{}:{}{}".format("https" if localConfig["use_https"] else "http",
+                                   localConfig["host"], localConfig["port"],
+                                   localConfig["inbox_path"])
+
 # Check that we're all good and authenticated
 try:
     list(localClient.discover_services())
@@ -75,6 +79,9 @@ for server in config:
     for collection in server["collections"]:
         for content_block in cli.poll(collection):
             log.debug("Pushing block %s", content_block)
-            localClient.push(content_block.content.decode("utf-8"), content_binding=content_block.binding)
+            localClient.push(content_block.content.decode("utf-8"), 
+                             collection_names=localConfig["collections"],
+                             content_binding=content_block.binding,
+                             uri=localInbox)
 
 log.info("Finished!")
