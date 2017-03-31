@@ -93,7 +93,7 @@ There is also an experimental feature to push MISP events to the TAXII server wh
 
 ## Automated TAXII -> MISP Sync
 
-If you want, there is the ability to synchronise between a remove TAXII server and the local MISP server.
+If you want, there is the ability to synchronise between a remote TAXII server and the local MISP server.
 
 ```bash
 $ install-remote-server.sh
