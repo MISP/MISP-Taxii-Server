@@ -91,6 +91,44 @@ Now you have a TAXII server hooked up to MISP, you're able to send STIX files to
 
 There is also an experimental feature to push MISP events to the TAXII server when they're published - that's in `scripts/push_published_to_taxii.py`. It seems to work, but may occasionally re-upload duplicate events to MISP.
 
+## Automated TAXII -> MISP Sync
+
+If you want, there is the ability to synchronise between a remove TAXII server and the local MISP server.
+
+```bash
+$ install-remote-server.sh
+
+[MISP-TAXII-SERVER]
+POLLING SERVER INSTALLATION
+FRIENDLY SERVER NAME:
+< Add a unique server name here, can be anything >
+```
+
+This will then install 2 files to `~/.misptaxii`, one for a local server and one for the remote servers.
+Edit these files as needed. Run `install-remote-server.sh` once for each remote server you want to add.
+
+You'll probably want to put the sync script on a crontab,
+
+First, run
+
+```bash
+echo `which python3` `which run-taxii-poll.py`
+```
+
+to get the path of your script, copy it. Then 
+
+```bash
+crontab -e
+```
+
+This will open your crontab. Paste in
+
+```cron
+* */6 * * * <the output of that echo command you just ran>
+```
+
+This will run the polling script every 6 hours to keep things all synced up.
+
 ## Planned features
 
 - Duplicate Detection
