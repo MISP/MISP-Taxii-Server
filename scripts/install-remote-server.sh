@@ -14,14 +14,16 @@ if [ ! -f $CONFIGDIR/local-server.yml ]; then
     cat >> $CONFIGDIR/local-server.yml << EOF
 host: localhost
 port: 9000
-discovery_path:
+discovery_path: /services/discovery
+inbox_path: /services/inbox
 use_https: False
 taxii_version: '1.1'
 headers:
 auth:
-  username:
-  password:
-collection:
+  username: test
+  password: test
+collections:
+  - collection
 EOF
 fi
 
