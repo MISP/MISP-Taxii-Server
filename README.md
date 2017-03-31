@@ -85,7 +85,7 @@ taxii-push --path http://localhost:9000/services/inbox -f stix_sample.xml \
 
 Obviously replace anything that differs in your system. 
 
-The client should say "Content Block Pushed Succesfully" if all went well.
+The client should say "Content Block Pushed Successfully" if all went well.
 
 Now you have a TAXII server hooked up to MISP, you're able to send STIX files to the inbox and have them uploaded directly to MISP. So that's nice <3
 
