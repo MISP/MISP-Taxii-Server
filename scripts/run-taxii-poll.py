@@ -74,4 +74,7 @@ for server in config:
 
     for collection in server["collections"]:
         for content_block in cli.poll(collection):
-            pass            
+            log.debug("Pushing block %s", content_block)
+            localClient.push(content_block.content.decode("utf-8"), content_binding=content_block.binding)
+
+log.info("Finished!")
