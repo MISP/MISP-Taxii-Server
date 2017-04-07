@@ -41,6 +41,12 @@ cat >> $CONFIGDIR/remote-servers.yml << EOF
   auth:
     username:
     password:
+    cacert_path:
+    cert_file:
+    key_file:
+    key_password:
+    jwt_auth_url:
+    verify_ssl: True
   collections:
     - collection
 EOF

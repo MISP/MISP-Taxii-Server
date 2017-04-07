@@ -73,8 +73,14 @@ for server in config:
                         version = server["taxii_version"],
                         headers = server["headers"])
 
-    cli.username = server["auth"]["username"]
-    cli.password = server["auth"]["password"]
+    cli.set_auth(username = server["auth"]["username"],
+                 password = server["auth"]["password"],
+                 ca_cert  = server["auth"].get("ca_cert"),
+                 cert_file= server["auth"].get("cert_file"),
+                 key_file = server["auth"].get("key_file"),
+                 key_password = server["auth"].get("key_password"),
+                 jwt_auth_url = server["auth"].get("jwt_auth_url"),
+                 verify_ssl = server["auth"].get("verify_ssl"))
 
     for collection in server["collections"]:
         for content_block in cli.poll(collection):
