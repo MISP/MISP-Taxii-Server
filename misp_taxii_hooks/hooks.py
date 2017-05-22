@@ -40,7 +40,7 @@ else:
 MISP = pymisp.PyMISP( 
                         CONFIG["misp"]["url"],
                         CONFIG["misp"]["api"],
-                        ssl = config["misp"].get("verifySSL", True)
+                        ssl = CONFIG["misp"].get("verifySSL", True)
                 )
 
 def post_stix(manager, content_block, collection_ids, service_id):
