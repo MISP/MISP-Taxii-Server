@@ -39,6 +39,7 @@ mysql> exit;
 
 Now, with that data edit `config.yaml`, and edit the `db_connection` parameters to match
 your environment. Change `auth_api -> parameters -> secret` whilst you're here as well.
+Do not forget to set your MISP server's URL and API key at the bottom.
 
 If you wish, you can edit the taxii service definitions in `services.yaml`, 
 or the collections to be created in `collections.yaml`; full documentation on how this is set up is available at [OpenTaxii's docs](https://opentaxii.readthedocs.io/en/stable/configuration.html).
@@ -47,8 +48,13 @@ Now it's time to create all your SQL tables. Luckily OpenTaxii comes with comman
 
 You're going to want to export your configuration file to a variable as well.
 ```bash
+# Install mysqlclient for python3 if you haven't already done so
+apt-get install libmysqlclient-dev # for mysql_config
+pip3 install mysqlclient
+
 # An example of this config is in the config directory
 export OPENTAXII_CONFIG=/path/to/config.yaml
+export PYTHONPATH=.
 
 opentaxii-create-services -c config/services.yaml
 opentaxii-create-collections -c config/collections.yaml
@@ -58,11 +64,9 @@ opentaxii-create-collections -c config/collections.yaml
 opentaxii-create-account -u root -p root
 ```
 
-OpenTaxii is now ready to roll, we've just gotta do one or two more things.
+OpenTaxii is now ready to roll, we've just gotta do one more thing.
 
-Edit `misp_taxii_hooks/hooks.py` and add your MISP server's URL and API key.
-
-Then, in the repository root directory, run 
+In the repository root directory, run 
 ```bash
 sudo python3 setup.py install
 ```
