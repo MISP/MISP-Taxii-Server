@@ -45,13 +45,20 @@ cli.set_auth(username = config["taxii"]["auth"]["username"],
 
 while True:
     # Wait for something to come in on the ZMQ socket
-    message = socket.recv().decode("utf-8")[10:]
-
+    message = socket.recv().decode("utf-8")
     log.info("Recieved a message!")
+    topic = message.split(' ', 1)[0]
+
+    if topic != 'misp_json':
+      log.info("Ignoring " + topic + "...")
+      continue
+
+    # Process the JSON payload
     log.debug("Processing...")
+    payload = message[len(topic)+1:]
 
     # Load the message JSON
-    msg = json.loads(message)
+    msg = json.loads(payload)
 
     log.debug(msg)
 
