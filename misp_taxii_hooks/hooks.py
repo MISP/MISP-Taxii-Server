@@ -58,7 +58,6 @@ def post_stix(manager, content_block, collection_ids, service_id):
         search = MISP.search("attributes", values=attrib)
         if search["response"] != []:
             # This means we have it!
-            print("REMOVING...")
             package.attributes.pop([x.value for x in package.attributes].index(attrib))
     
     # Push the event to MISP
