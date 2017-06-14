@@ -52,6 +52,15 @@ def post_stix(manager, content_block, collection_ids, service_id):
     # Load the package
     package = pymisp.tools.stix.load_stix(content_block.content)
 
+    values = [x.value for x in package.attributes]
+    for attrib in values:
+        print("CHECKING {}".format(attrib))
+        search = MISP.search("attributes", values=attrib)
+        if search["response"] != []:
+            # This means we have it!
+            print("REMOVING...")
+            package.attributes.pop([x.value for x in package.attributes].index(attrib))
+    
     # Push the event to MISP
     # TODO: There's probably a proper method to do this rather than json_full
     # But I don't wanna read docs
