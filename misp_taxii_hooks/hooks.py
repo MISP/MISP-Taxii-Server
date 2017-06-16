@@ -55,7 +55,7 @@ def post_stix(manager, content_block, collection_ids, service_id):
     values = [x.value for x in package.attributes]
     for attrib in values:
         print("CHECKING {}".format(attrib))
-        search = MISP.search("attributes", values=attrib)
+        search = MISP.search("attributes", values=str(attrib))
         if search["response"] != []:
             # This means we have it!
             package.attributes.pop([x.value for x in package.attributes].index(attrib))
@@ -64,6 +64,7 @@ def post_stix(manager, content_block, collection_ids, service_id):
     # TODO: There's probably a proper method to do this rather than json_full
     # But I don't wanna read docs
     if (len(package.attributes) > 0):
+        print(package.attributes[0].value)
         MISP.add_event(package._json_full())
 
 # Make TAXII call our push function whenever it gets new data
