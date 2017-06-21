@@ -17,6 +17,7 @@ args = parser.parse_args()
 
 # Set up a logger for logging's sake
 log = logging.getLogger(__name__)
+logging.basicConfig(filename="poll.log")
 log.setLevel(logging.DEBUG if args.verbose else logging.INFO)
 
 # If we want, print the output to stdout
@@ -66,6 +67,10 @@ log.info("Connected")
 
 for server in config:
     log.info("== %s ==", server["name"])
+
+    log.debug("Creating client")
+    log.debug("HOST:PORT : %s:%s", server["host"], server["port"])
+    log.debug("DISCPATH: %s", server["discovery_path"])
     cli = create_client(host = server["host"],
                         port = server["port"],
                         discovery_path = server["discovery_path"],
@@ -73,6 +78,11 @@ for server in config:
                         version = server["taxii_version"],
                         headers = server["headers"])
 
+    log.debug("Setting client log level")
+    cli.log.setLevel(logging.DEBUG if args.verbose else logging.INFO)
+        
+
+    log.debug("Setting authentication...")
     cli.set_auth(username = server["auth"]["username"],
                  password = server["auth"]["password"],
                  ca_cert  = server["auth"].get("ca_cert"),
@@ -82,8 +92,14 @@ for server in config:
                  jwt_auth_url = server["auth"].get("jwt_auth_url"),
                  verify_ssl = server["auth"].get("verify_ssl"))
 
+    log.debug("Discovering services...")
+    services = cli.discover_services()
+    log.debug(services)
+
+    log.debug("Auth set.")
     for collection in server["collections"]:
-        for content_block in cli.poll(collection):
+        log.debug("Polling %s", collection)
+        for content_block in cli.poll(collection_name=collection):
             log.debug("Pushing block %s", content_block)
             localClient.push(content_block.content.decode("utf-8"), 
                              collection_names=localConfig["collections"],
