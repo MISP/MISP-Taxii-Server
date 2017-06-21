@@ -1,11 +1,11 @@
 ---
+collections:
+  - name: collection
+    available: true
+    accept_all_content: true
+    type: DATA_SET
 
-- name: collection
-  available: true
-  accept_all_content: true
-  type: DATA_SET
-
-  service_ids:
-    - inbox
-    - collection_management
-    - poll
+    service_ids:
+      - inbox
+      - collection_management
+      - poll
