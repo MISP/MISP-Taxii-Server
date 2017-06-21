@@ -99,11 +99,20 @@ for server in config:
     log.debug("Auth set.")
     for collection in server["collections"]:
         log.debug("Polling %s", collection)
-        for content_block in cli.poll(collection_name=collection):
-            log.debug("Pushing block %s", content_block)
-            localClient.push(content_block.content.decode("utf-8"), 
-                             collection_names=localConfig["collections"],
-                             content_binding=content_block.binding,
-                             uri=localInbox)
+        try:
+            for content_block in cli.poll(collection_name=collection):
+                try:
+                    log.debug("Pushing block %s", content_block)
+                    localClient.push(content_block.content.decode("utf-8"), 
+                                     collection_names=localConfig["collections"],
+                                     content_binding=content_block.binding,
+                                     uri=localInbox)
+                except Exception as ex:
+                    log.error("FAILED TO PUSH BLOCK!")
+                    log.error("%s", content_block)
+                    log.exception(ex, exc_info=True)
+        except Exception as ex:
+            log.error("FAILED TO POLL %s", collection)
+            log.exception(ex, exc_info=True)
 
 log.info("Finished!")
