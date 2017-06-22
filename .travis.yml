@@ -18,8 +18,8 @@ before_install:
     - wget "https://github.com/TAXIIProject/libtaxii/archive/1.1.111.tar.gz"
     - tar xf 1.1.111.tar.gz
     - cd libtaxii-1.1.111
-    - sudo pip install -r requirements.txt
-    - sudo python setup.py install
+    - pip install -r requirements.txt
+    - python setup.py install
     - cd ..
 
 install:
