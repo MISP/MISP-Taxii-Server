@@ -14,8 +14,13 @@ env:
     - OPENTAXII_CONFIG=$TRAVIS_BUILD_DIR/config/config.travis.yaml URL="http://35.163.95.230" APIKEY=pF4Rq3JOHbYAJLMiFDqRPpLxAh3s0PakiSPKWSN5
 
 before_install:
-    - sudo apt-get install mysql-server-5.6 mysql-client-core-5.6 mysql-client-5.6
-    - sudo pip install libtaxii==1.1.111
+    - sudo apt-get install mysql-server-5.6 mysql-client-core-5.6 mysql-client-5.6 libxml2-dev libxslt1-dev zlib1g-dev
+    - wget "https://github.com/TAXIIProject/libtaxii/archive/1.1.111.tar.gz"
+    - tar xf 1.1.111.tar.gz
+    - cd libtaxii-1.1.111
+    - sudo pip install -r requirements.txt
+    - sudo python setup.py install
+    - cd ..
 
 install:
     # Check the config is ok
