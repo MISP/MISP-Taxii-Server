@@ -7,7 +7,10 @@
 import os
 import pymisp
 import tempfile
+import logging
 from pyaml import yaml
+
+log = logging.getLogger("__main__")
 
 from opentaxii.signals import (
     CONTENT_BLOCK_CREATED, INBOX_MESSAGE_CREATED
@@ -50,22 +53,29 @@ def post_stix(manager, content_block, collection_ids, service_id):
     '''
 
     # Load the package
+    log.info("Posting STIX...")
     package = pymisp.tools.stix.load_stix(content_block.content)
-
+    log.info("STIX loaded succesfully.")
     values = [x.value for x in package.attributes]
+    log.info("Extracted %s", values)
     for attrib in values:
-        print("CHECKING {}".format(attrib))
+        log.info("Checking for existence of %s", attrib)
         search = MISP.search("attributes", values=str(attrib))
         if search["response"] != []:
             # This means we have it!
+            log.info("%s is a duplicate, we'll ignore it.", attrib)
             package.attributes.pop([x.value for x in package.attributes].index(attrib))
-    
+        else:
+            log.info("%s is unique, we'll keep it", attrib)
+
     # Push the event to MISP
     # TODO: There's probably a proper method to do this rather than json_full
     # But I don't wanna read docs
     if (len(package.attributes) > 0):
-        print(package.attributes[0].value)
+        log.info("Uploading event to MISP with attributes %s", [x.value for x in package.attributes])
         MISP.add_event(package._json_full())
+    else:
+        log.info("No attributes, not bothering.")
 
 # Make TAXII call our push function whenever it gets new data
 CONTENT_BLOCK_CREATED.connect(post_stix)
