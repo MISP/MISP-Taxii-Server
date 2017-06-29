@@ -1,6 +1,7 @@
 # MISP Taxii Server
 
 ![Build Status ](https://travis-ci.org/MISP/MISP-Taxii-Server.svg?branch=master)
+[![Code Health](https://landscape.io/github/MISP/MISP-Taxii-Server/master/landscape.svg?style=flat)](https://landscape.io/github/MISP/MISP-Taxii-Server/master)
 
 A set of configuration files to use with EclecticIQ's OpenTAXII implementation,
 along with a callback for when data is sent to the TAXII Server's inbox.
