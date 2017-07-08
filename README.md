@@ -129,7 +129,7 @@ crontab -e
 This will open your crontab. Paste in
 
 ```cron
-* */6 * * * <the output of that echo command you just ran>
+0 */6 * * * <the output of that echo command you just ran>
 ```
 
 This will run the polling script every 6 hours to keep things all synced up.
