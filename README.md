@@ -15,6 +15,8 @@ git clone --recursive https://github.com/MISP/MISP-Taxii-Server
 
 This will also download the OpenTAXII Server, which you should install with
 ```bash
+# There's some weird bug wherein pip can't parge >=1.1.111
+sudo pip3 install libtaxii==1.1.111
 cd OpenTAXII
 sudo python3 setup.py install
 ```
