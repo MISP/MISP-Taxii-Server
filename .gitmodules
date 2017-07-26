@@ -1,3 +1,6 @@
 [submodule "OpenTAXII"]
 	path = OpenTAXII
 	url = https://github.com/EclecticIQ/OpenTAXII.git
+[submodule "PyMISP"]
+	path = PyMISP
+	url = https://github.com/MISP/PyMISP.git
