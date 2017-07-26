@@ -72,8 +72,12 @@ while True:
     log.debug("Loaded successfully!")
     
     # Push the package to TAXII
-    cli.push(pkg.to_xml().decode("utf-8"), "urn:stix.mitre.org:xml:1.1.1", 
-            uri="http://{}/services/inbox".format(config["domain"]),
-            collection_names=["collection"])
+    try:
+        cli.push(pkg.to_xml().decode("utf-8"), "urn:stix.mitre.org:xml:1.1.1", 
+                uri="http://{}/services/inbox".format(config["domain"]),
+                collection_names=["collection"])
 
-    log.info("Pushed!")     
+        log.info("Pushed!")     
+    except Exception as ex:
+        log.fatal("COULD NOT PUSH")
+        log.exception(ex)
