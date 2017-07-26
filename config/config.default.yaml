@@ -29,3 +29,10 @@ zmq:
 misp:
     url: "http://localhost"
     api: KEY
+
+taxii:
+    auth:
+        username: ABC
+        password: CDE
+    collections:
+        - collection
