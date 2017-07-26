@@ -4,3 +4,6 @@
 [submodule "PyMISP"]
 	path = PyMISP
 	url = https://github.com/MISP/PyMISP.git
+[submodule "MISP-STIX-Converter"]
+	path = MISP-STIX-Converter
+	url = https://github.com/MISP/MISP-STIX-Converter.git
