@@ -38,7 +38,7 @@ socket.connect("tcp://{}:{}".format(
 socket.setsockopt_string(zmq.SUBSCRIBE, '')
 
 # Connct to TAXII as well
-cli = create_client(discovery_path="http://{}/services/discovery".format(config["domain"]))
+cli = create_client(discovery_path="{}://{}/services/discovery".format(config.get("protocol", "http"), config["domain"]))
 cli.set_auth(username = config["taxii"]["auth"]["username"], 
              password = config["taxii"]["auth"]["password"]
             )
