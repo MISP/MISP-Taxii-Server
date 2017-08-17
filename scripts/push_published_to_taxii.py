@@ -74,7 +74,7 @@ while True:
     # Push the package to TAXII
     try:
         cli.push(pkg.to_xml().decode("utf-8"), "urn:stix.mitre.org:xml:1.1.1", 
-                uri="http://{}/services/inbox".format(config["domain"]),
+                uri="{}://{}/services/inbox".format(config.get("protocol", "http"), config["domain"]),
                 collection_names=config["taxii"].get("collections", ["collection"]))
 
         log.info("Pushed!")     
