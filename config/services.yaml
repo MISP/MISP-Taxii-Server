@@ -45,4 +45,4 @@ services:
       authentication_required: yes
       protocol_bindings:
         - urn:taxii.mitre.org:protocol:http:1.0
-
+        - urn:taxii.mitre.org:protocol:https:1.0
