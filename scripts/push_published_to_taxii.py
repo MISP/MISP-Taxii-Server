@@ -84,8 +84,9 @@ while True:
                 i.version = version
 
         try:
-            cli.push(pkg.to_xml().decode("utf-8"), 
-                     "urn:stix.mitre.org:xml:{}".format(version), 
+            log.info("Using binding %s", "urn:stix.mitre.org:xml:{}".format(version))
+            cli.push(content=pkg.to_xml().decode("utf-8"), 
+                     content_binding="urn:stix.mitre.org:xml:{}".format(version), 
                      uri="{}://{}/services/inbox".format(config.get("protocol", "http"), 
                                                          config["domain"]),
                      collection_names=config["taxii"].get("collections", ["collection"]))
