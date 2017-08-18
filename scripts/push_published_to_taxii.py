@@ -6,6 +6,7 @@ import pymisp
 import warnings
 from pyaml import yaml
 from cabby import create_client
+from misp_stix_converter.converters import lint_roller
 import logging
 
 # Set up logger
@@ -72,12 +73,23 @@ while True:
     log.debug("Loaded successfully!")
     
     # Push the package to TAXII
-    try:
-        cli.push(pkg.to_xml().decode("utf-8"), "urn:stix.mitre.org:xml:1.1.1", 
-                uri="{}://{}/services/inbox".format(config.get("protocol", "http"), config["domain"]),
-                collection_names=config["taxii"].get("collections", ["collection"]))
+    for version in config.get("stix_versions", ["1.1.1"]):
+        # Convert to that version 
+        objs = lint_roller.lintRoll(pkg)
+        for i in objs:
+            # Set the object's version
+            if hasattr(i, "version"):
+                i.version = version
 
-        log.info("Pushed!")     
-    except Exception as ex:
-        log.fatal("COULD NOT PUSH")
-        log.exception(ex)
+        try:
+            cli.push(pkg.to_xml().decode("utf-8"), 
+                     "urn:stix.mitre.org:xml:{}".format(version), 
+                     uri="{}://{}/services/inbox".format(config.get("protocol", "http"), 
+                                                         config["domain"]),
+                     collection_names=config["taxii"].get("collections", ["collection"]))
+
+            log.info("Pushed! (%s)", version)     
+            
+        except Exception as ex:
+            log.fatal("COULD NOT PUSH")
+            log.exception(ex)
