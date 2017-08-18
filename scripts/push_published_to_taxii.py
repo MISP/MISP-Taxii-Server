@@ -83,6 +83,9 @@ while True:
             if hasattr(i, "version"):
                 i.version = version
 
+        # Set the top-level
+        pkg.version = version
+
         try:
             log.info("Using binding %s", "urn:stix.mitre.org:xml:{}".format(version))
             cli.push(content=pkg.to_xml().decode("utf-8"), 
