@@ -43,6 +43,8 @@ cli = create_client(discovery_path="{}://{}/services/discovery".format(config.ge
 cli.set_auth(username = config["taxii"]["auth"]["username"], 
              password = config["taxii"]["auth"]["password"]
             )
+if not config.get("verify_ssl", True):
+    cli.verify_ssl = False
 
 while True:
     # Wait for something to come in on the ZMQ socket
