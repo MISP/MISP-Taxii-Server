@@ -40,8 +40,7 @@ mysql> grant all on taxiipersist.* to 'taxii'@'%' identified by 'some_password';
 mysql> exit;
 ```
 
-Now, with that data edit `config.yaml`, and edit the `db_connection` parameters to match
-your environment. Change `auth_api -> parameters -> secret` whilst you're here as well.
+Now, with that data, copy `config/config.default.yaml` over to `config/config.yaml` and open it. Edit the `db_connection` parameters to match your environment. Change `auth_api -> parameters -> secret` whilst you're here as well.
 Do not forget to set your MISP server's URL and API key at the bottom.
 
 If you wish, you can edit the taxii service definitions in `services.yaml`, 
