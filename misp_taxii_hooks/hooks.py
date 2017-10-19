@@ -9,6 +9,7 @@ import pymisp
 import tempfile
 import logging
 from pyaml import yaml
+from io import StringIO
 
 log = logging.getLogger("__main__")
 
@@ -54,7 +55,7 @@ def post_stix(manager, content_block, collection_ids, service_id):
 
     # Load the package
     log.info("Posting STIX...")
-    package = pymisp.tools.stix.load_stix(content_block.content)
+    package = pymisp.tools.stix.load_stix(StringIO(content_block.content.decode()))
     log.info("STIX loaded succesfully.")
     values = [x.value for x in package.attributes]
     log.info("Extracted %s", values)
