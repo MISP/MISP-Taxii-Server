@@ -55,7 +55,11 @@ def post_stix(manager, content_block, collection_ids, service_id):
 
     # Load the package
     log.info("Posting STIX...")
-    package = pymisp.tools.stix.load_stix(StringIO(content_block.content.decode()))
+    block = content_block.content
+    if isinstance(block, bytes):
+        block = block.decode()
+ 
+    package = pymisp.tools.stix.load_stix(StringIO(block))
     log.info("STIX loaded succesfully.")
     values = [x.value for x in package.attributes]
     log.info("Extracted %s", values)
