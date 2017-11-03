@@ -78,7 +78,7 @@ def post_stix(manager, content_block, collection_ids, service_id):
     # But I don't wanna read docs
     if (len(package.attributes) > 0):
         log.info("Uploading event to MISP with attributes %s", [x.value for x in package.attributes])
-        MISP.add_event(package._json_full())
+        MISP.add_event(package)
     else:
         log.info("No attributes, not bothering.")
 
