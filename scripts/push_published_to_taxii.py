@@ -10,7 +10,7 @@ from misp_stix_converter.converters import lint_roller
 import logging
 
 # Set up logger
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO, format="'%(asctime)s - %(name)s - %(levelname)s - %(message)s')")
 log = logging.getLogger(__name__)
 
 # Try to load in config
