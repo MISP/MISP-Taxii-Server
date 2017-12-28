@@ -17,7 +17,7 @@ args = parser.parse_args()
 
 # Set up a logger for logging's sake
 log = logging.getLogger(__name__)
-logging.basicConfig(filename="poll.log", format="'%(asctime)s - %(name)s - %(levelname)s - %(message)s')")
+logging.basicConfig(filename="poll.log", format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 log.setLevel(logging.DEBUG if args.verbose else logging.INFO)
 
 # If we want, print the output to stdout

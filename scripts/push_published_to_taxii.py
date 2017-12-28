@@ -10,9 +10,14 @@ from misp_stix_converter.converters import lint_roller
 import logging
 
 # Set up logger
-logging.basicConfig(level=logging.INFO, format="'%(asctime)s - %(name)s - %(levelname)s - %(message)s')")
 log = logging.getLogger(__name__)
+formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+ch = logging.FileHandler("push.log")
+ch.setFormatter(formatter)
+log.addHandler(ch)
+log.setLevel(logging.DEBUG)
 
+log.info("Starting...")
 # Try to load in config
 if "OPENTAXII_CONFIG" in os.environ:
     config = yaml.load(open(os.environ["OPENTAXII_CONFIG"], "r"))
@@ -97,5 +102,5 @@ while True:
             log.info("Pushed! (%s)", version)     
             
         except Exception as ex:
-            log.fatal("COULD NOT PUSH")
-            log.exception(ex)
+            logging.fatal("COULD NOT PUSH")
+            logging.exception(ex)
