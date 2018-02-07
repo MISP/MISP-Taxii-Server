@@ -16,7 +16,8 @@ parser.add_argument("-v", "--verbose", action="store_true", help="More verbose l
 parser.add_argument("-s", "--stdout", action="store_true", help="Log to STDOUT")
 parser.add_argument("--start", help="Date to poll from (YYYY-MM-DD), Exclusive")
 parser.add_argument("--end", help="Date to poll to (YYYY-MM-DD), Inclusive")
- 
+parser.add_argument("--subscription_id", help="The ID of the subscription", default=None)
+
 args = parser.parse_args()
 
 # Set up a logger for logging's sake
@@ -108,7 +109,8 @@ for server in config:
         log.debug("Polling %s", collection)
         log.debug("Within date range %s - %s", poll_from or "Beginning of time", poll_to)
         try:
-            for content_block in cli.poll(collection_name=collection, 
+            for content_block in cli.poll(collection_name=collection,
+                                          subscription_id=subscription_id,
                                           begin_date=poll_from,
                                           end_date=poll_to):
                 try:
