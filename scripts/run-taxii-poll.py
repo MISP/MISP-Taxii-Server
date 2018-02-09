@@ -72,6 +72,7 @@ log.info("Connected")
 
 poll_from = datetime.strptime(args.start, "%Y-%m-%d") if args.start else None
 poll_to = datetime.strptime(args.end, "%Y-%m-%d") if args.end else datetime.now()
+subscription_id = args.subscription_id
 
 for server in config:
     log.info("== %s ==", server["name"])
