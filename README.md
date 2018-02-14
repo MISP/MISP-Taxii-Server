@@ -150,6 +150,44 @@ ALTER DATABASE taxiipersist CHARACTER SET latin1 COLLATE latin1_general_ci;
 ALTER DATABASE taxiiauth CHARACTER SET latin1 COLLATE latin1_general_ci;
 ```
 
+### Nothing appears in MISP
+
+Take note of the user you did `export OPENTAXII_CONFIG=/path/to/config.yaml` with. If you `sudo`, this env will be lost. Use `sudo -E` to preserve env instead.
+
+### InsecureRequestWarning
+
+PyMISP complains about missing certificate verification. Under the misp-options in  `config.yaml` do not simply set `verifySSL = False`. You can provide the CA bundle, a concatenation of all certificates in the chain, as `verifySSL = /path/to/ca_bundle`. Alternatively, you can `export REQUESTS_CA_BUNDLE=/path/to/ca_bundle`.
+
+## Verifying the database
+
+To verify that the `opentaxii-create-services` and `opentaxii-create-collections` worked, check the tables of database `taxiipersist`:
+
+```
+MariaDB [taxiipersist]> show tables;
++-----------------------------+
+| Tables_in_taxiipersist      |
++-----------------------------+
+| collection_to_content_block |
+| content_blocks              |
+| data_collections            |
+| inbox_messages              |
+| result_sets                 |
+| service_to_collection       |
+| services                    |
+| subscriptions               |
++-----------------------------+
+```
+
+To verify whether the account-creation worked, check database `taxiiauth`:
+```
+MariaDB [taxiiauth]> select * from accounts;
++----+----------+-----------------------------------------------------------------------------------------------+
+| id | username | password_hash                                                                                 |
++----+----------+-----------------------------------------------------------------------------------------------+
+|  1 | ltaxii   | pbkdf2:sha256:50000$99999999$1111111111111111111111111111111111111111111111111111111111111111 |
++----+----------+-----------------------------------------------------------------------------------------------+
+```
+
 ## Planned features
 
 - Duplicate Detection
