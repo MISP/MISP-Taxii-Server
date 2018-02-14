@@ -135,6 +135,21 @@ This will open your crontab. Paste in
 
 This will run the polling script every 6 hours to keep things all synced up.
 
+## Troubleshooting
+
+### Specified key was too long
+
+```python 
+Warning: (1071, 'Specified key was too long; max key length is 767 bytes')
+```
+
+If you encounter the error above, try the following after creating the databases as per [this issue](https://github.com/MISP/MISP-Taxii-Server/issues/3#issuecomment-291875813):
+
+```SQL
+ALTER DATABASE taxiipersist CHARACTER SET latin1 COLLATE latin1_general_ci;
+ALTER DATABASE taxiiauth CHARACTER SET latin1 COLLATE latin1_general_ci;
+```
+
 ## Planned features
 
 - Duplicate Detection
