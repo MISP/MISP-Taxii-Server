@@ -137,6 +137,28 @@ This will run the polling script every 6 hours to keep things all synced up.
 
 ## Troubleshooting
 
+### Data truncated for column...
+
+```python 
+Warning: (1265, "Data truncated for column 'original_message' at row 1")
+
+Warning: (1265, "Data truncated for column 'content' at row 1")
+```
+
+If you encounter the error above, this means you tried to push a STIX file bigger than 65,535 bytes. To fix it run the following commands.
+```bash
+mysql -u [database user] -p
+# Enter Database password
+
+mysql> use taxiipersist;
+
+mysql> alter table `inbox_messages` modify `original_message` LONGTEXT;
+
+mysql> alter table `content_blocks` modify `content` LONGTEXT;
+
+mysql> exit;
+```
+
 ### Specified key was too long
 
 ```python 
