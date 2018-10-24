@@ -159,3 +159,77 @@ This will open your crontab. Paste in
 
 This will run the polling script every 6 hours to keep things all synced up.
 
+## Troubleshooting
+
+### Data truncated for column...
+
+```python 
+Warning: (1265, "Data truncated for column 'original_message' at row 1")
+
+Warning: (1265, "Data truncated for column 'content' at row 1")
+```
+
+If you encounter the error above, this means you tried to push a STIX file bigger than 65,535 bytes. To fix it run the following commands.
+```bash
+mysql -u [database user] -p
+# Enter Database password
+
+mysql> use taxiipersist;
+
+mysql> alter table `inbox_messages` modify `original_message` LONGTEXT;
+
+mysql> alter table `content_blocks` modify `content` LONGTEXT;
+
+mysql> exit;
+```
+
+### Specified key was too long
+
+```python 
+Warning: (1071, 'Specified key was too long; max key length is 767 bytes')
+```
+
+If you encounter the error above, try the following after creating the databases as per [this issue](https://github.com/MISP/MISP-Taxii-Server/issues/3#issuecomment-291875813):
+
+```SQL
+ALTER DATABASE taxiipersist CHARACTER SET latin1 COLLATE latin1_general_ci;
+ALTER DATABASE taxiiauth CHARACTER SET latin1 COLLATE latin1_general_ci;
+```
+
+### Nothing appears in MISP
+
+Take note of the user you did `export OPENTAXII_CONFIG=/path/to/config.yaml` with. If you `sudo`, this env will be lost. Use `sudo -E` to preserve env instead.
+
+### InsecureRequestWarning
+
+PyMISP complains about missing certificate verification. Under the misp-options in  `config.yaml` do not simply set `verifySSL = False`. You can provide the CA bundle, a concatenation of all certificates in the chain, as `verifySSL = /path/to/ca_bundle`. Alternatively, you can `export REQUESTS_CA_BUNDLE=/path/to/ca_bundle`.
+
+## Verifying the database
+
+To verify that the `opentaxii-create-services` and `opentaxii-create-collections` worked, check the tables of database `taxiipersist`:
+
+```
+MariaDB [taxiipersist]> show tables;
++-----------------------------+
+| Tables_in_taxiipersist      |
++-----------------------------+
+| collection_to_content_block |
+| content_blocks              |
+| data_collections            |
+| inbox_messages              |
+| result_sets                 |
+| service_to_collection       |
+| services                    |
+| subscriptions               |
++-----------------------------+
+```
+
+To verify whether the account-creation worked, check database `taxiiauth`:
+```
+MariaDB [taxiiauth]> select * from accounts;
++----+----------+-----------------------------------------------------------------------------------------------+
+| id | username | password_hash                                                                                 |
++----+----------+-----------------------------------------------------------------------------------------------+
+|  1 | ltaxii   | pbkdf2:sha256:50000$99999999$1111111111111111111111111111111111111111111111111111111111111111 |
++----+----------+-----------------------------------------------------------------------------------------------+
+```
