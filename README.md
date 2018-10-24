@@ -8,6 +8,30 @@ along with a callback for when data is sent to the TAXII Server's inbox.
 
 ## Installation
 
+### Docker install
+
+For a really simple sqlite-based installation (plug and play, no persistence)
+
+```bash
+docker pull floatingghost/misp-taxii-server
+docker run -it \
+    -e PERSIST_CONNECTION_STRING="sqlite:///persist.db" \
+    -e AUTH_CONNECTION_STRING="sqlite:///auth.db" \
+    -e MISP_URL="https://mymisp" \
+    -e MISP_KEY="myapikey" \
+    -e TAXII_USER=root \
+    -e TAXII_PASS=root 
+    -p 9000:9000 \
+    taxii
+```
+
+That'll get you set up with a basic server, but is not recommended for production.
+Switch the connection strings to use an external database for that.
+
+This docker image currently just runs the base server with no supplimentary scripts.
+
+### Manual install
+
 Download the repository with
 ```bash
 git clone --recursive https://github.com/MISP/MISP-Taxii-Server
@@ -135,6 +159,3 @@ This will open your crontab. Paste in
 
 This will run the polling script every 6 hours to keep things all synced up.
 
-## Planned features
-
-- Duplicate Detection
