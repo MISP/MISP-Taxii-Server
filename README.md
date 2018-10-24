@@ -20,9 +20,9 @@ docker run -it \
     -e MISP_URL="https://mymisp" \
     -e MISP_KEY="myapikey" \
     -e TAXII_USER=root \
-    -e TAXII_PASS=root 
+    -e TAXII_PASS=root \
     -p 9000:9000 \
-    taxii
+    floatingghost/misp-taxii-server
 ```
 
 That'll get you set up with a basic server, but is not recommended for production.
