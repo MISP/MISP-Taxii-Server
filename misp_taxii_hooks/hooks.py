@@ -66,7 +66,7 @@ def post_stix(manager, content_block, collection_ids, service_id):
     for attrib in values:
         log.info("Checking for existence of %s", attrib)
         search = MISP.search("attributes", values=str(attrib))
-        if search["response"] != []:
+        if search["response"]["Attribute"] != []:
             # This means we have it!
             log.info("%s is a duplicate, we'll ignore it.", attrib)
             package.attributes.pop([x.value for x in package.attributes].index(attrib))
