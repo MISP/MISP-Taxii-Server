@@ -17,7 +17,6 @@ before_install:
     - sudo apt-get install mysql-server-5.6 mysql-client-core-5.6 mysql-client-5.6 libxml2-dev libxslt1-dev zlib1g-dev
     - pip install -r REQUIREMENTS.txt
     - python setup.py install
-    - cd ..
     - docker pull floatingghost/misp-testable:v2.4.102
     - docker run -d -p 80:80 floatingghost/misp-testable:v2.4.102
 
@@ -25,17 +24,10 @@ install:
     # Check the config is ok
     - echo $OPENTAXII_CONFIG
     - mysql --version
-    # Set up the deps
-    - git submodule init 
-    - git submodule update
     #Configure hooks
     - <misp_taxii_hooks/hooks.py sed 's@\[URL\]@'"$URL"'@; s@\[APIKEY\]@'"$APIKEY"'@' > misp_taxii_hooks/hooks.py
     - head -n20 misp_taxii_hooks/hooks.py
     - python setup.py install
-    # Install OpenTAXII
-    - cd OpenTAXII
-    - python setup.py install
-    - cd ..
     # Create databases
     - mysql -u root -e 'create database taxiiauth; create database taxiipersist;'
     - mysql -u root -e "grant all on taxiiauth.* to 'taxii'@'%' identified by 'some_password';"
