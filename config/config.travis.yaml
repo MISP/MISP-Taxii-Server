@@ -31,5 +31,5 @@ taxii:
         username: root
         password: root
 misp:
-    url: "http://ec2-52-42-201-6.us-west-2.compute.amazonaws.com"
-    api: Vjy0ra7wO6w6si7hbjxX52nARfVpaAO6Tm6lxeSm
+    url: "http://localhost"
+    api:  testmispapikeytestmispapikeytestmispapik

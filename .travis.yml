@@ -9,6 +9,7 @@ python:
 
 services:
     - mysql
+    - docker
 
 env:
     - OPENTAXII_CONFIG=$TRAVIS_BUILD_DIR/config/config.travis.yaml URL="http://35.163.95.230" APIKEY=pF4Rq3JOHbYAJLMiFDqRPpLxAh3s0PakiSPKWSN5
@@ -21,6 +22,8 @@ before_install:
     - pip install -r requirements.txt
     - python setup.py install
     - cd ..
+    - docker pull floatingghost/misp-testable:v2.4.102
+    - docker run -d -p 80:80 floatingghost/misp-testable:v2.4.102
 
 install:
     # Check the config is ok
