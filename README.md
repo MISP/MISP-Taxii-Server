@@ -40,8 +40,8 @@ Now, with that data, copy `config/config.default.yaml` over to `config/config.ya
 
 Do not forget to set your MISP server's URL and API key at the bottom.
 
-If you wish, you can edit the taxii service definitions in `services.yaml`, 
-or the collections to be created in `collections.yaml`; full documentation on how this is set up is available at [OpenTaxii's docs](https://opentaxii.readthedocs.io/en/stable/configuration.html).
+If you wish, you can edit the taxii service definitions and collections in 
+`config/data-configuration.yaml`; full documentation on how this is set up is available at [OpenTaxii's docs](https://opentaxii.readthedocs.io/en/stable/configuration.html).
 
 Now it's time to create all your SQL tables. Luckily OpenTaxii comes with commands for this.
 
@@ -55,12 +55,7 @@ pip3 install mysqlclient
 export OPENTAXII_CONFIG=/path/to/config.yaml
 export PYTHONPATH=.
 
-opentaxii-sync-data config/services.yaml
-opentaxii-sync-data config/collections.yaml
-
-# Create a user account
-# Set the username and password to whatever you want
-opentaxii-create-account -u root -p root
+opentaxii-sync-data config/data-configuration.yaml
 ```
 
 OpenTaxii is now ready to roll, we've just gotta do one more thing.
@@ -82,8 +77,8 @@ This should tell you that there is now a server running on `localhost:9000` (may
 
 If you want to test everything is working, run
 ```bash
-taxii-push --path http://localhost:9000/services/inbox -f stix_sample.xml \
-           --dest collection --username root --password root
+taxii-push --path http://localhost:9000/services/inbox -f tests/test.xml \
+           --dest my_collection --username admin --password admin
 ```
 
 Obviously replace anything that differs in your system. 
@@ -93,29 +88,6 @@ The client should say "Content Block Pushed Successfully" if all went well.
 Now you have a TAXII server hooked up to MISP, you're able to send STIX files to the inbox and have them uploaded directly to MISP. So that's nice <3
 
 There is also an experimental feature to push MISP events to the TAXII server when they're published - that's in `scripts/push_published_to_taxii.py`. It seems to work, but may occasionally re-upload duplicate events to MISP.
-
-
-### Docker install
-
-For a really simple sqlite-based installation (plug and play, no persistence)
-
-```bash
-docker pull floatingghost/misp-taxii-server
-docker run -it \
-    -e PERSIST_CONNECTION_STRING="sqlite:///persist.db" \
-    -e AUTH_CONNECTION_STRING="sqlite:///auth.db" \
-    -e MISP_URL="https://mymisp" \
-    -e MISP_KEY="myapikey" \
-    -e TAXII_USER=root \
-    -e TAXII_PASS=root \
-    -p 9000:9000 \
-    floatingghost/misp-taxii-server
-```
-
-That'll get you set up with a basic server, but is not recommended for production.
-Switch the connection strings to use an external database for that.
-
-This docker image currently just runs the base server with no supplimentary scripts.
 
 ## Automated TAXII -> MISP Sync
 
