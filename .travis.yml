@@ -38,5 +38,5 @@ script:
     - opentaxii-run-dev &
     - pid=$!
     - sleep 15
-    - taxii-push --path http://127.0.0.1:9000/services/inbox -f test/test.xml --dest my_collection --username admin --password admin; done;
+    - taxii-push --path http://127.0.0.1:9000/services/inbox -f test/test.xml --dest my_collection --username admin --password admin
     - kill -s INT $pid
