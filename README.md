@@ -8,63 +8,36 @@ along with a callback for when data is sent to the TAXII Server's inbox.
 
 ## Installation
 
-### Docker install
-
-For a really simple sqlite-based installation (plug and play, no persistence)
-
-```bash
-docker pull floatingghost/misp-taxii-server
-docker run -it \
-    -e PERSIST_CONNECTION_STRING="sqlite:///persist.db" \
-    -e AUTH_CONNECTION_STRING="sqlite:///auth.db" \
-    -e MISP_URL="https://mymisp" \
-    -e MISP_KEY="myapikey" \
-    -e TAXII_USER=root \
-    -e TAXII_PASS=root \
-    -p 9000:9000 \
-    floatingghost/misp-taxii-server
-```
-
-That'll get you set up with a basic server, but is not recommended for production.
-Switch the connection strings to use an external database for that.
-
-This docker image currently just runs the base server with no supplimentary scripts.
 
 ### Manual install
 
-Download the repository with
 ```bash
-git clone --recursive https://github.com/MISP/MISP-Taxii-Server
-```
-
-This will also download the OpenTAXII Server, which you should install with
-```bash
-# There's some weird bug wherein pip can't parse >=1.1.111
-sudo pip3 install libtaxii==1.1.111
-cd OpenTAXII
-sudo python3 setup.py install
+git clone https://github.com/MISP/MISP-Taxii-Server
+cd MISP-Taxii-Server
+pip3 install -r REQUIREMENTS.txt
 ```
 
 You'll then need to set up your TAXII database. As you're using MISP, you'll likely
 already have a MySQL environment running. 
 
-Run the following commands to create your databases
 ```bash
 mysql -u [database user] -p
 # Enter Database password
-
 mysql> create database taxiiauth;
-
 mysql> create database taxiipersist;
-
 mysql> grant all on taxiiauth.* to 'taxii'@'%' identified by 'some_password';
-
 mysql> grant all on taxiipersist.* to 'taxii'@'%' identified by 'some_password';
-
 mysql> exit;
 ```
 
+Now configure your TAXII server
+
+```bash
+cp config/config.default.yaml config/config.yaml
+```
+
 Now, with that data, copy `config/config.default.yaml` over to `config/config.yaml` and open it. Edit the `db_connection` parameters to match your environment. Change `auth_api -> parameters -> secret` whilst you're here as well.
+
 Do not forget to set your MISP server's URL and API key at the bottom.
 
 If you wish, you can edit the taxii service definitions in `services.yaml`, 
@@ -82,8 +55,8 @@ pip3 install mysqlclient
 export OPENTAXII_CONFIG=/path/to/config.yaml
 export PYTHONPATH=.
 
-opentaxii-create-services -c config/services.yaml
-opentaxii-create-collections -c config/collections.yaml
+opentaxii-sync-data config/services.yaml
+opentaxii-sync-data config/collections.yaml
 
 # Create a user account
 # Set the username and password to whatever you want
@@ -120,6 +93,29 @@ The client should say "Content Block Pushed Successfully" if all went well.
 Now you have a TAXII server hooked up to MISP, you're able to send STIX files to the inbox and have them uploaded directly to MISP. So that's nice <3
 
 There is also an experimental feature to push MISP events to the TAXII server when they're published - that's in `scripts/push_published_to_taxii.py`. It seems to work, but may occasionally re-upload duplicate events to MISP.
+
+
+### Docker install
+
+For a really simple sqlite-based installation (plug and play, no persistence)
+
+```bash
+docker pull floatingghost/misp-taxii-server
+docker run -it \
+    -e PERSIST_CONNECTION_STRING="sqlite:///persist.db" \
+    -e AUTH_CONNECTION_STRING="sqlite:///auth.db" \
+    -e MISP_URL="https://mymisp" \
+    -e MISP_KEY="myapikey" \
+    -e TAXII_USER=root \
+    -e TAXII_PASS=root \
+    -p 9000:9000 \
+    floatingghost/misp-taxii-server
+```
+
+That'll get you set up with a basic server, but is not recommended for production.
+Switch the connection strings to use an external database for that.
+
+This docker image currently just runs the base server with no supplimentary scripts.
 
 ## Automated TAXII -> MISP Sync
 

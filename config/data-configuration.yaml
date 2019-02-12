@@ -46,3 +46,23 @@ services:
       protocol_bindings:
         - urn:taxii.mitre.org:protocol:http:1.0
         - urn:taxii.mitre.org:protocol:https:1.0
+
+collections:
+  - name: my_collection
+    available: true
+    accept_all_content: true
+    type: DATA_SET
+
+    service_ids:
+      - inbox
+      - collection_management
+      - poll
+
+accounts:
+  - username: guest
+    password: guest
+    permissions:
+      my_collection: read
+  - username: admin
+    password: admin
+    is_admin: yes

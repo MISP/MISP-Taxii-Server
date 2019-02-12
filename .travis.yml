@@ -1,25 +1,21 @@
-dist: trusty
 sudo: required
 
 language: python
 
 python:
     - "3.5"
-    - "nightly"
+    - "3.6"
 
 services:
     - mysql
     - docker
 
 env:
-    - OPENTAXII_CONFIG=$TRAVIS_BUILD_DIR/config/config.travis.yaml URL="http://35.163.95.230" APIKEY=pF4Rq3JOHbYAJLMiFDqRPpLxAh3s0PakiSPKWSN5
+    - OPENTAXII_CONFIG=$TRAVIS_BUILD_DIR/config/config.travis.yaml URL="http://localhost" APIKEY=testmispapikeytestmispapikeytestmispapik
 
 before_install:
     - sudo apt-get install mysql-server-5.6 mysql-client-core-5.6 mysql-client-5.6 libxml2-dev libxslt1-dev zlib1g-dev
-    - wget "https://github.com/TAXIIProject/libtaxii/archive/1.1.111.tar.gz"
-    - tar xf 1.1.111.tar.gz
-    - cd libtaxii-1.1.111
-    - pip install -r requirements.txt
+    - pip install -r REQUIREMENTS.txt
     - python setup.py install
     - cd ..
     - docker pull floatingghost/misp-testable:v2.4.102
@@ -45,14 +41,10 @@ install:
     - mysql -u root -e "grant all on taxiiauth.* to 'taxii'@'%' identified by 'some_password';"
     - mysql -u root -e "grant all on taxiipersist.* to 'taxii'@'%' identified by 'some_password';"
     # Populate databases
-    - opentaxii-create-services -c config/services.yaml
-    - opentaxii-create-collections -c config/collections.yaml
-    - opentaxii-create-account -u travis -p travis
+    - opentaxii-sync-data config/data-configuration.yaml
 script:
     - opentaxii-run-dev &
     - pid=$!
     - sleep 15
-    - cd tests
-    - nosetests .
-    - cd .. 
+    - for file in tests/*.xml; do; taxii-push --path http://127.0.0.1:9000/services/inbox -f $file --dest my_collection --username admin --password admin; done;
     - kill -s INT $pid
