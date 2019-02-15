@@ -143,11 +143,8 @@ mysql -u [database user] -p
 # Enter Database password
 
 mysql> use taxiipersist;
-
 mysql> alter table `inbox_messages` modify `original_message` LONGTEXT;
-
 mysql> alter table `content_blocks` modify `content` LONGTEXT;
-
 mysql> exit;
 ```
 
@@ -174,7 +171,7 @@ PyMISP complains about missing certificate verification. Under the misp-options 
 
 ## Verifying the database
 
-To verify that the `opentaxii-create-services` and `opentaxii-create-collections` worked, check the tables of database `taxiipersist`:
+To verify that the `opentaxii-sync-data` worked, check the tables of database `taxiipersist`:
 
 ```
 MariaDB [taxiipersist]> show tables;
