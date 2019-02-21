@@ -198,3 +198,30 @@ MariaDB [taxiiauth]> select * from accounts;
 |  1 | ltaxii   | pbkdf2:sha256:50000$99999999$1111111111111111111111111111111111111111111111111111111111111111 |
 +----+----------+-----------------------------------------------------------------------------------------------+
 ```
+
+### Ambigious Polling Service
+
+In the case that the server you want to poll has multiple `POLL` services,
+run
+
+```bash
+taxii-discovery \
+  --host <HOST TO POLL>
+  --port <POLLING PORT>
+  --discovery <DISCOVERY PATH, sometimes /taxii-discovery-service, may vary>
+```
+
+It'll show you the services available on the server. You'll *probably*
+see two POLL services, for different version of TAXII (message binding)
+
+Find the one relevent to you, copy its `Service Address`,
+and modify `~/.misptaxii/remote-servers.yml` to resemble
+
+```yaml
+- name: "my server"
+  taxii_version: "1.1"
+  ...
+  uri: <SERVICE ADDRESS>
+```
+
+now try polling again
