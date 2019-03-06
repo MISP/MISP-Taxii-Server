@@ -14,6 +14,8 @@ along with a callback for when data is sent to the TAXII Server's inbox.
 ```bash
 git clone https://github.com/MISP/MISP-Taxii-Server
 cd MISP-Taxii-Server
+
+apt-get install libmysqlclient-dev # for mysql_config
 pip3 install -r REQUIREMENTS.txt
 ```
 
@@ -47,10 +49,6 @@ Now it's time to create all your SQL tables. Luckily OpenTaxii comes with comman
 
 You're going to want to export your configuration file to a variable as well.
 ```bash
-# Install mysqlclient for python3 if you haven't already done so
-apt-get install libmysqlclient-dev # for mysql_config
-pip3 install mysqlclient
-
 # An example of this config is in the config directory
 export OPENTAXII_CONFIG=/path/to/config.yaml
 export PYTHONPATH=.
