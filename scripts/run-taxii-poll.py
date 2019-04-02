@@ -150,7 +150,7 @@ for server in config:
     log.debug("Auth set.")
     for collection in server["collections"]:
         log.debug("Polling %s", collection)
-        server_uri_override = server.get("uri", None)
+        server_uri_override = server.get("uri", "")
         if not server_uri_override.startswith("http"):
             server_uri_override = None
         if server_uri_override:
