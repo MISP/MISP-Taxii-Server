@@ -2,6 +2,7 @@
 
 from cabby import create_client
 from pyaml import yaml
+from yaml import Loader
 import pytz
 import argparse
 import os
@@ -51,14 +52,14 @@ config_file = "{}/remote-servers.yml".format(
 
 log.debug("Opening config file %s", config_file)
 with open(config_file, "r") as f:
-    config = yaml.load(f.read())
+    config = yaml.load(f.read(), Loader=Loader)
 log.debug("Config read %s", config)
 
 # Read in the local server configuration
 local_config = "{}/local-server.yml".format(os.path.expanduser(args.configdir))
 log.debug("Reading local server config")
 with open(local_config, "r") as f:
-    local_config = yaml.load(f.read())
+    local_config = yaml.load(f.read(), Loader=Loader)
 
 # Attempt to make contact with the local server
 log.info("Connecting to local server...")
