@@ -67,12 +67,22 @@ def post_stix(manager, content_block, collection_ids, service_id):
     for attrib in values:
         log.info("Checking for existence of %s", attrib)
         search = MISP.search("attributes", values=str(attrib))
-        if search["response"]["Attribute"] != []:
-            # This means we have it!
-            log.info("%s is a duplicate, we'll ignore it.", attrib)
-            package.attributes.pop([x.value for x in package.attributes].index(attrib))
+        if 'response' in search:
+            if search["response"]["Attribute"] != []:
+                # This means we have it!
+                log.info("%s is a duplicate, we'll ignore it.", attrib)
+                package.attributes.pop([x.value for x in package.attributes].index(attrib))
+            else:
+                log.info("%s is unique, we'll keep it", attrib)
+        elif 'Attribute' in search:
+            if search["Attribute"] != []:
+                # This means we have it!
+                log.info("%s is a duplicate, we'll ignore it.", attrib)
+                package.attributes.pop([x.value for x in package.attributes].index(attrib))
+            else:
+                log.info("%s is unique, we'll keep it", attrib)
         else:
-            log.info("%s is unique, we'll keep it", attrib)
+            log.error("Something went wrong with search, and it doesn't have an 'attribute' or a 'response' key: {}".format(search.keys()))
 
     # Push the event to MISP
     # TODO: There's probably a proper method to do this rather than json_full
