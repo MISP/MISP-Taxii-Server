@@ -9,6 +9,7 @@ import pymisp
 import tempfile
 import logging
 from pyaml import yaml
+from yaml import Loader
 from io import StringIO
 
 log = logging.getLogger("__main__")
@@ -20,7 +21,7 @@ from opentaxii.signals import (
 ## CONFIG
 if "OPENTAXII_CONFIG" in os.environ:
     print("Using config from {}".format(os.environ["OPENTAXII_CONFIG"]))
-    CONFIG =  yaml.load(open(os.environ["OPENTAXII_CONFIG"], "r"))
+    CONFIG =  yaml.load(open(os.environ["OPENTAXII_CONFIG"], "r"), Loader=Loader)
 else:
     print("Trying to use env variables...")
     if "MISP_URL" in os.environ:
