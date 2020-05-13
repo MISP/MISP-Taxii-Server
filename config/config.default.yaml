@@ -29,6 +29,7 @@ zmq:
 misp:
     url: "http://localhost"
     api: KEY
+    dedup: true
 
 taxii:
     auth:
