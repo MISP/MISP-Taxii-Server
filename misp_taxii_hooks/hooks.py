@@ -22,6 +22,8 @@ from opentaxii.signals import (
 if "OPENTAXII_CONFIG" in os.environ:
     print("Using config from {}".format(os.environ["OPENTAXII_CONFIG"]))
     CONFIG =  yaml.load(open(os.environ["OPENTAXII_CONFIG"], "r"), Loader=Loader)
+    if "dedup" not in CONFIG["misp"]:
+        CONFIG["misp"]["dedup"] = "UNKNOWN"
 else:
     print("Trying to use env variables...")
     if "MISP_URL" in os.environ:
@@ -70,7 +72,11 @@ def post_stix(manager, content_block, collection_ids, service_id):
     log.info("STIX loaded succesfully.")
     values = [x.value for x in package.attributes]
     log.info("Extracted %s", values)
-    if CONFIG['MISP_DEDUP'] == "true" or CONFIG['MISP_DEDUP'] == "True" or CONFIG['MISP_DEDUP'] == "TRUE" or CONFIG['MISP_DEDUP'] == "UNKNOWN":
+    if (
+        CONFIG["misp"]["dedup"] == True or 
+        CONFIG["misp"]["dedup"] == "True" or 
+        CONFIG["misp"]["dedup"] == "UNKNOWN"
+    ):
         for attrib in values:
             log.info("Checking for existence of %s", attrib)
             search = MISP.search("attributes", values=str(attrib))
