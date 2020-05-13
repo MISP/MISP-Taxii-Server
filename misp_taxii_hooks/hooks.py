@@ -34,11 +34,17 @@ else:
     else:
         print("Unknown misp API key. Set OPENTAXII_CONFIG or MISP_API.")
         misp_api = "UNKNOWN"
+    if "MISP_DEDUP" in os.environ:
+        misp_dedup = os.environ["MISP_DEDUP"]
+    else:
+        print("Unknown misp deduplication setting. Set OPENTAXII_CONFIG or MISP_DEDUP.")
+        misp_dedup = "UNKNOWN"
 
     CONFIG = {
                 "misp" : {
                             "url" : misp_url,
-                            "api" : misp_api
+                            "api" : misp_api,
+                            "dedup" : misp_dedup
                         }
             }
 
@@ -64,25 +70,26 @@ def post_stix(manager, content_block, collection_ids, service_id):
     log.info("STIX loaded succesfully.")
     values = [x.value for x in package.attributes]
     log.info("Extracted %s", values)
-    for attrib in values:
-        log.info("Checking for existence of %s", attrib)
-        search = MISP.search("attributes", values=str(attrib))
-        if 'response' in search:
-            if search["response"]["Attribute"] != []:
-                # This means we have it!
-                log.info("%s is a duplicate, we'll ignore it.", attrib)
-                package.attributes.pop([x.value for x in package.attributes].index(attrib))
+    if CONFIG['MISP_DEDUP'] == "true" or CONFIG['MISP_DEDUP'] == "True" or CONFIG['MISP_DEDUP'] == "TRUE" or CONFIG['MISP_DEDUP'] == "UNKNOWN":
+        for attrib in values:
+            log.info("Checking for existence of %s", attrib)
+            search = MISP.search("attributes", values=str(attrib))
+            if 'response' in search:
+                if search["response"]["Attribute"] != []:
+                    # This means we have it!
+                    log.info("%s is a duplicate, we'll ignore it.", attrib)
+                    package.attributes.pop([x.value for x in package.attributes].index(attrib))
+                else:
+                    log.info("%s is unique, we'll keep it", attrib)
+            elif 'Attribute' in search:
+                if search["Attribute"] != []:
+                    # This means we have it!
+                    log.info("%s is a duplicate, we'll ignore it.", attrib)
+                    package.attributes.pop([x.value for x in package.attributes].index(attrib))
+                else:
+                    log.info("%s is unique, we'll keep it", attrib)
             else:
-                log.info("%s is unique, we'll keep it", attrib)
-        elif 'Attribute' in search:
-            if search["Attribute"] != []:
-                # This means we have it!
-                log.info("%s is a duplicate, we'll ignore it.", attrib)
-                package.attributes.pop([x.value for x in package.attributes].index(attrib))
-            else:
-                log.info("%s is unique, we'll keep it", attrib)
-        else:
-            log.error("Something went wrong with search, and it doesn't have an 'attribute' or a 'response' key: {}".format(search.keys()))
+                log.error("Something went wrong with search, and it doesn't have an 'attribute' or a 'response' key: {}".format(search.keys()))
 
     # Push the event to MISP
     # TODO: There's probably a proper method to do this rather than json_full
