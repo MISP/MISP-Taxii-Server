@@ -6,3 +6,4 @@ config.yaml
 __pycache__
 build
 dist
+src
