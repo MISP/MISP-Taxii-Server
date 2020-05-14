@@ -131,6 +131,8 @@ def post_stix(manager, content_block, collection_ids, service_id):
                     log.info("%s is unique, we'll keep it", attrib)
             else:
                 log.error("Something went wrong with search, and it doesn't have an 'attribute' or a 'response' key: {}".format(search.keys()))
+    else:
+        log.info("Skipping deduplication")
 
     # Push the event to MISP
     # TODO: There's probably a proper method to do this rather than json_full
@@ -139,10 +141,10 @@ def post_stix(manager, content_block, collection_ids, service_id):
         log.info("Uploading event to MISP with attributes %s", [x.value for x in package.attributes])
         event = MISP.add_event(package)
         if (
-            CONFIG["misp"]["publish"] or
+            CONFIG["misp"]["publish"] == True or
             CONFIG["misp"]["publish"] == "True"
         ):
-            log.info("Publishing event to MISP with ID {}".format(event['id']))
+            log.info("Publishing event to MISP with ID {}".format(event.get('uuid')))
             MISP.publish(event)
     else:
         log.info("No attributes, not bothering.")
