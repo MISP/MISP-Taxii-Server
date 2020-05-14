@@ -146,6 +146,8 @@ def post_stix(manager, content_block, collection_ids, service_id):
         ):
             log.info("Publishing event to MISP with ID {}".format(event.get('uuid')))
             MISP.publish(event)
+        else:
+            log.info("Skipping MISP event publishing")
     else:
         log.info("No attributes, not bothering.")
 
