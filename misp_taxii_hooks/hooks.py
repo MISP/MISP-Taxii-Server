@@ -76,11 +76,14 @@ def post_stix(manager, content_block, collection_ids, service_id):
 
     # make sure collections, if specified are supposed to be sent to 
     if CONFIG["misp"]["collections"] != "UNKNOWN" or CONFIG["misp"]["collections"] == False:
+        log.info("Using collections")
         should_send_to_misp = False
         collection_names = [collection.name for collection in manager.get_collections(service_id)]
         for collection in CONFIG["misp"]["collections"]:
             if collection in collection_names or collection in collection_ids:
+                log.info("Collection specified matches push collection: {}".format(collection))
                 should_send_to_misp = True
+                break
         if should_send_to_misp == False:
             log.info('''No collections match misp.collections; aborting MISP extraction.
     Collection ids whitelisted: {}
