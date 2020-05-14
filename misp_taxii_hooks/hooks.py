@@ -30,7 +30,7 @@ def env_config_helper(env_name):
 
 def yaml_config_helper(config_name, CONFIG):
     if config_name in CONFIG["misp"]:
-        if not CONFIG["misp"][config_name]:
+        if not CONFIG["misp"][config_name] and CONFIG["misp"][config_name] != False:
             CONFIG["misp"][config_name] = "UNKNOWN"
     else:
         CONFIG["misp"][config_name] = "UNKNOWN"
