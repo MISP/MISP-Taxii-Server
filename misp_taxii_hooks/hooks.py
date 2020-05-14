@@ -18,35 +18,47 @@ from opentaxii.signals import (
     CONTENT_BLOCK_CREATED, INBOX_MESSAGE_CREATED
 )
 
+def env_config_helper(env_name):
+    if env_name in os.environ:
+        if env_name == "MISP_COLLECTIONS":
+            name = os.environ[env_name]
+            return name.split(',')
+        return os.environ[env_name]
+    else:
+        print("Missing env setting {0}. Set OPENTAXII_CONFIG or {0}.".format(env_name))
+        return "UNKNOWN"
+
+def yaml_config_helper(config_name, CONFIG):
+    if config_name in CONFIG["misp"]:
+        if not CONFIG["misp"][config_name]:
+            CONFIG["misp"][config_name] = "UNKNOWN"
+    else:
+        CONFIG["misp"][config_name] = "UNKNOWN"
+    return CONFIG
+
 ## CONFIG
 if "OPENTAXII_CONFIG" in os.environ:
     print("Using config from {}".format(os.environ["OPENTAXII_CONFIG"]))
     CONFIG =  yaml.load(open(os.environ["OPENTAXII_CONFIG"], "r"), Loader=Loader)
-    if "dedup" not in CONFIG["misp"]:
-        CONFIG["misp"]["dedup"] = "UNKNOWN"
+    # validate dedup and collections and publish
+    CONFIG = yaml_config_helper("dedup", CONFIG)
+    CONFIG = yaml_config_helper("collections", CONFIG)
+    CONFIG = yaml_config_helper("publish", CONFIG)
+
 else:
     print("Trying to use env variables...")
-    if "MISP_URL" in os.environ:
-        misp_url = os.environ["MISP_URL"]
-    else:
-        print("Unkown misp URL. Set OPENTAXII_CONFIG or MISP_URL.")
-        misp_url = "UNKNOWN"
-    if "MISP_API" in os.environ:
-        misp_api = os.environ["MISP_API"]
-    else:
-        print("Unknown misp API key. Set OPENTAXII_CONFIG or MISP_API.")
-        misp_api = "UNKNOWN"
-    if "MISP_DEDUP" in os.environ:
-        misp_dedup = os.environ["MISP_DEDUP"]
-    else:
-        print("Unknown misp deduplication setting. Set OPENTAXII_CONFIG or MISP_DEDUP.")
-        misp_dedup = "UNKNOWN"
+    misp_url = env_config_helper("MISP_URL")
+    misp_api = env_config_helper("MISP_API")
+    misp_dedup = env_config_helper("MISP_DEDUP")
+    misp_collections = env_config_helper("MISP_COLLECTIONS")
+    misp_publish = env_config_helper("MISP_PUBLISH")
 
     CONFIG = {
                 "misp" : {
                             "url" : misp_url,
                             "api" : misp_api,
-                            "dedup" : misp_dedup
+                            "dedup" : misp_dedup,
+                            "collections": misp_collections
                         }
             }
 
@@ -62,6 +74,21 @@ def post_stix(manager, content_block, collection_ids, service_id):
         Will convert it to a MISPEvent and push to the server
     '''
 
+    # make sure collections, if specified are supposed to be sent to 
+    if CONFIG["misp"]["collections"] != "UNKNOWN" or CONFIG["misp"]["collections"] == False:
+        should_send_to_misp = False
+        for collection in CONFIG["misp"]["collections"]:
+            if collection in collection_ids:
+                should_send_to_misp = True
+        if should_send_to_misp == False:
+            log.info('''No collections match misp.collections; aborting MISP extraction.
+    Collection ids whitelisted: {}
+    Collection ids sent to: {}'''.format(
+                CONFIG["misp"]["collections"],
+                collection_ids
+            ))
+            return None
+
     # Load the package
     log.info("Posting STIX...")
     block = content_block.content
@@ -72,8 +99,10 @@ def post_stix(manager, content_block, collection_ids, service_id):
     log.info("STIX loaded succesfully.")
     values = [x.value for x in package.attributes]
     log.info("Extracted %s", values)
+
+    # if deduping is enabled, start deduping
     if (
-        CONFIG["misp"]["dedup"] == True or 
+        CONFIG["misp"]["dedup"] or 
         CONFIG["misp"]["dedup"] == "True" or 
         CONFIG["misp"]["dedup"] == "UNKNOWN"
     ):
@@ -102,7 +131,13 @@ def post_stix(manager, content_block, collection_ids, service_id):
     # But I don't wanna read docs
     if (len(package.attributes) > 0):
         log.info("Uploading event to MISP with attributes %s", [x.value for x in package.attributes])
-        MISP.add_event(package)
+        event = MISP.add_event(package)
+        if (
+            CONFIG["misp"]["publish"] or
+            CONFIG["misp"]["publish"] == "True"
+        ):
+            log.info("Publishing event to MISP with ID {}".format(event['id']))
+            MISP.publish(event)
     else:
         log.info("No attributes, not bothering.")
 
