@@ -15,10 +15,12 @@ from requests.exceptions import ConnectionError
 
 logging_level = logging.INFO
 log = logging.getLogger("__main__")
+handler = logging.StreamHandler()
 log.setLevel(logging_level)
 handler.setLevel(logging_level)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 handler.setFormatter(formatter)
+log.addHandler(handler)
 
 
 from opentaxii.signals import (
