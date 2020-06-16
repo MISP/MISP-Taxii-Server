@@ -71,6 +71,7 @@ else:
                             "collections": misp_collections
                         }
             }
+MISP = ''
 try:
     MISP = pymisp.PyMISP( 
                         CONFIG["misp"]["url"],
@@ -126,7 +127,9 @@ def post_stix(manager, content_block, collection_ids, service_id):
     ):
         for attrib in values:
             log.info("Checking for existence of %s", attrib)
-            search = MISP.search("attributes", values=str(attrib))
+            search = ''
+            if MISP:
+                search = MISP.search("attributes", values=str(attrib))
             if 'response' in search:
                 if search["response"]["Attribute"] != []:
                     # This means we have it!
@@ -151,16 +154,19 @@ def post_stix(manager, content_block, collection_ids, service_id):
     # But I don't wanna read docs
     if (len(package.attributes) > 0):
         log.info("Uploading event to MISP with attributes %s", [x.value for x in package.attributes])
+        event = ''
         try:
-            event = MISP.add_event(package)
-        except ConnectionError:
+            if MISP:
+                event = MISP.add_event(package)
+        except ConnectionError, NameError:
             log.error("Cannot push to MISP; please ensure that MISP is up and running at {}. Skipping MISP upload.".format(CONFIG['misp']['url']))
         if (
             CONFIG["misp"]["publish"] == True or
             CONFIG["misp"]["publish"] == "True"
         ):
             log.info("Publishing event to MISP with ID {}".format(event.get('uuid')))
-            MISP.publish(event)
+            if MISP:
+                MISP.publish(event)
         else:
             log.info("Skipping MISP event publishing")
     else:
