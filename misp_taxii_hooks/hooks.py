@@ -158,7 +158,7 @@ def post_stix(manager, content_block, collection_ids, service_id):
         try:
             if MISP:
                 event = MISP.add_event(package)
-        except ConnectionError, NameError:
+        except ConnectionError:
             log.error("Cannot push to MISP; please ensure that MISP is up and running at {}. Skipping MISP upload.".format(CONFIG['misp']['url']))
         if (
             CONFIG["misp"]["publish"] == True or
