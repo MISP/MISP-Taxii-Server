@@ -12,6 +12,7 @@ from pyaml import yaml
 from yaml import Loader
 from io import StringIO
 from requests.exceptions import ConnectionError
+from pymisp.exceptions import PyMISPError
 
 logging_level = logging.INFO
 log = logging.getLogger("__main__")
@@ -70,12 +71,14 @@ else:
                             "collections": misp_collections
                         }
             }
-
-MISP = pymisp.PyMISP( 
+try:
+    MISP = pymisp.PyMISP( 
                         CONFIG["misp"]["url"],
                         CONFIG["misp"]["api"],
                         ssl = CONFIG["misp"].get("verifySSL", True)
                 )
+except PyMISPError:
+    log.error("Cannot connect to MISP; please ensure that MISP is up and running at {}. Skipping MISP upload.".format(CONFIG['misp']['url']))
 
 def post_stix(manager, content_block, collection_ids, service_id):
     '''
@@ -151,7 +154,7 @@ def post_stix(manager, content_block, collection_ids, service_id):
         try:
             event = MISP.add_event(package)
         except ConnectionError:
-            log.error("MISP-Taxii-Server - Cannot connect to MISP; please ensure that MISP is up and running at {}. Skipping MISP upload.".format(CONFIG['misp']['url']))
+            log.error("Cannot push to MISP; please ensure that MISP is up and running at {}. Skipping MISP upload.".format(CONFIG['misp']['url']))
         if (
             CONFIG["misp"]["publish"] == True or
             CONFIG["misp"]["publish"] == "True"
