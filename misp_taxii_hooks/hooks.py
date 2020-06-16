@@ -11,8 +11,15 @@ import logging
 from pyaml import yaml
 from yaml import Loader
 from io import StringIO
+from requests.exceptions import ConnectionError
 
+logging_level = logging.INFO
 log = logging.getLogger("__main__")
+log.setLevel(logging_level)
+handler.setLevel(logging_level)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+
 
 from opentaxii.signals import (
     CONTENT_BLOCK_CREATED, INBOX_MESSAGE_CREATED
@@ -25,7 +32,7 @@ def env_config_helper(env_name):
             return name.split(',')
         return os.environ[env_name]
     else:
-        print("Missing env setting {0}. Set OPENTAXII_CONFIG or {0}.".format(env_name))
+        log.error("Missing env setting {0}. Set OPENTAXII_CONFIG or {0}.".format(env_name))
         return "UNKNOWN"
 
 def yaml_config_helper(config_name, CONFIG):
@@ -38,7 +45,7 @@ def yaml_config_helper(config_name, CONFIG):
 
 ## CONFIG
 if "OPENTAXII_CONFIG" in os.environ:
-    print("Using config from {}".format(os.environ["OPENTAXII_CONFIG"]))
+    log.info("Using config from {}".format(os.environ["OPENTAXII_CONFIG"]))
     CONFIG =  yaml.load(open(os.environ["OPENTAXII_CONFIG"], "r"), Loader=Loader)
     # validate dedup and collections and publish
     CONFIG = yaml_config_helper("dedup", CONFIG)
@@ -46,7 +53,7 @@ if "OPENTAXII_CONFIG" in os.environ:
     CONFIG = yaml_config_helper("publish", CONFIG)
 
 else:
-    print("Trying to use env variables...")
+    log.debug("Trying to use env variables...")
     misp_url = env_config_helper("MISP_URL")
     misp_api = env_config_helper("MISP_API")
     misp_dedup = env_config_helper("MISP_DEDUP")
@@ -139,7 +146,10 @@ def post_stix(manager, content_block, collection_ids, service_id):
     # But I don't wanna read docs
     if (len(package.attributes) > 0):
         log.info("Uploading event to MISP with attributes %s", [x.value for x in package.attributes])
-        event = MISP.add_event(package)
+        try:
+            event = MISP.add_event(package)
+        except ConnectionError:
+            log.error("MISP-Taxii-Server - Cannot connect to MISP; please ensure that MISP is up and running at {}. Skipping MISP upload.".format(CONFIG['misp']['url']))
         if (
             CONFIG["misp"]["publish"] == True or
             CONFIG["misp"]["publish"] == "True"
