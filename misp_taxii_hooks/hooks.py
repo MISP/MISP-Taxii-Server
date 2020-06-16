@@ -113,8 +113,12 @@ def post_stix(manager, content_block, collection_ids, service_id):
     block = content_block.content
     if isinstance(block, bytes):
         block = block.decode()
- 
-    package = pymisp.tools.stix.load_stix(StringIO(block))
+
+    try:
+        package = pymisp.tools.stix.load_stix(StringIO(block))
+    except:
+        log.error('Could not load stix into MISP format; exiting.')
+        return 0
     log.info("STIX loaded succesfully.")
     values = [x.value for x in package.attributes]
     log.info("Extracted %s", values)
@@ -130,6 +134,8 @@ def post_stix(manager, content_block, collection_ids, service_id):
             search = ''
             if MISP:
                 search = MISP.search("attributes", values=str(attrib))
+            else:
+                return 0
             if 'response' in search:
                 if search["response"]["Attribute"] != []:
                     # This means we have it!
