@@ -141,8 +141,8 @@ mysql -u [database user] -p
 # Enter Database password
 
 mysql> use taxiipersist;
-mysql> alter table `inbox_messages` modify `original_message` LONGTEXT;
-mysql> alter table `content_blocks` modify `content` LONGTEXT;
+mysql> alter table `inbox_messages` modify `original_message` LONGBLOB;
+mysql> alter table `content_blocks` modify `content` LONGBLOB;
 mysql> exit;
 ```
 
@@ -223,3 +223,55 @@ and modify `~/.misptaxii/remote-servers.yml` to resemble
 ```
 
 now try polling again
+
+
+## Configuring Gunicorn with Systemd 
+
+Review, edit and save the following Systemd Unit definition at `/etc/systemd/system/misp-taxii-server.service`
+
+```
+# /etc/systemd/system/gunicorn.service
+
+[Unit]
+Description=gunicorn open taxi server
+After=network.target
+
+# Wait for apache2/MISP to start
+After=apache2.service
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+
+User=misp
+Group=misp
+
+# Prevent writes to /usr, /boot, and /etc
+ProtectSystem=full
+
+# Execute pre and post scripts as root, otherwise it does it as User=
+PermissionsStartOnly=true
+
+ExecStart=/usr/bin/gunicorn opentaxii.http:app --bind localhost:9000 --config python:opentaxii.http \
+            --log-level=debug --log-file=/home/misp/integrations/log/opentaxi.log --reload --limit-request-line 0
+Type=simple
+
+KillSignal=SIGKILL
+
+# Set TimeZone
+Environment="TZ=UTC"
+
+# Set MISP-Taxii-Server environment variables - Edit this as needed         
+Environment="OPENTAXII_CONFIG=/home/misp/integrations/MISP-Taxii-Server/config/config.yaml"
+Environment="PYTHONPATH=."
+
+```
+
+To enable and start the service:
+
+```
+systemctl enable misp-taxii-server
+systemctl start misp-taxii-server
+```
+
