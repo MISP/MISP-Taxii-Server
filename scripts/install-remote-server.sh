@@ -37,6 +37,8 @@ cat >> $CONFIGDIR/remote-servers.yml << EOF
   discovery_path: 
   use_https: False
   taxii_version: '1.1'
+  rate_limit: 0
+  rate_limit_threshold: 0
   headers: 
   auth:
     username:

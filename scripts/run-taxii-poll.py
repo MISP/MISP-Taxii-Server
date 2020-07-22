@@ -7,6 +7,7 @@ import argparse
 import os
 import logging
 import sys
+import time
 from datetime import datetime
 
 # Create an argument parser for our program
@@ -71,7 +72,6 @@ local_client = create_client(host=local_config["host"],
 
 local_client.username = local_config["auth"]["username"]
 local_client.password = local_config["auth"]["password"]
-
 
 local_inbox = "{}://{}:{}{}".format(
     "https" if local_config["use_https"] else "http",
@@ -146,10 +146,17 @@ for server in config:
     log.debug("Discovering services...")
     services = cli.discover_services()
     log.debug(services)
+    rate_limit = 0
+    if "rate_limit" in server:
+      rate_limit = server["rate_limit"]
+
+    rate_limit_threshold = 5
+    if "rate_limit_threshold" in server:
+      rate_limit_threshold = server["rate_limit_threshold"]
 
     log.debug("Auth set.")
     for collection in server["collections"]:
-        log.debug("Polling %s", collection)
+        log.debug("Polling: %s ; Collection: /%s", server["host"],collection)
         server_uri_override = server.get("uri", "")
         if not server_uri_override.startswith("http"):
             server_uri_override = None
@@ -158,12 +165,21 @@ for server in config:
 
         log.debug("Within date range %s - %s",
                   poll_from or "Beginning of time", poll_to)
+        poll_count =0
         try:
+            log.debug("Polling %s , URI:%s",collection,server.get("uri",None))
             for content_block in cli.poll(collection_name=collection,
                                           subscription_id=subscription_id,
                                           begin_date=poll_from,
                                           end_date=poll_to,
                                           uri=server.get("uri", None)):
+                time.sleep(0.5) #Prevent hammering the server
+                poll_count += 1
+                if poll_count >= rate_limit_threshold:
+                    log.info("Rate limiting,sleeping for %s after %s polls",str(rate_limit),str(rate_limit_threshold))
+                    time.sleep(rate_limit)
+                    poll_count = 0
+
                 try:
                     log.debug("Pushing block %s", content_block)
                     local_client.push(
@@ -175,6 +191,9 @@ for server in config:
                     log.error("FAILED TO PUSH BLOCK!")
                     log.error("%s", content_block)
                     log.exception(ex, exc_info=True)
+                   # Continue polling when individual blocks fail to push to the local server
+                    continue
+
         except Exception as ex:
             log.error("FAILED TO POLL %s", collection)
             log.exception(ex, exc_info=True)

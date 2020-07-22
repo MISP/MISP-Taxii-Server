@@ -141,8 +141,8 @@ mysql -u [database user] -p
 # Enter Database password
 
 mysql> use taxiipersist;
-mysql> alter table `inbox_messages` modify `original_message` LONGTEXT;
-mysql> alter table `content_blocks` modify `content` LONGTEXT;
+mysql> alter table `inbox_messages` modify `original_message` LONGBLOB;
+mysql> alter table `content_blocks` modify `content` LONGBLOB;
 mysql> exit;
 ```
 
