@@ -13,16 +13,23 @@ from yaml import Loader
 from io import StringIO
 from requests.exceptions import ConnectionError
 from pymisp.exceptions import PyMISPError
+import warnings
+warnings.filterwarnings("ignore")
+
+TOTAL_ATTRIBUTES_SENT = 0
+TOTAL_ATTRIBUTES_ANALYZED = 0
 
 logging_level = logging.INFO
-log = logging.getLogger("__main__")
-handler = logging.StreamHandler()
+
+log = logging.getLogger("misp_taxii_server")
 log.setLevel(logging_level)
+handler = logging.StreamHandler()
 handler.setLevel(logging_level)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 handler.setFormatter(formatter)
+if log.handlers:
+    log.handlers = []
 log.addHandler(handler)
-
 
 from opentaxii.signals import (
     CONTENT_BLOCK_CREATED, INBOX_MESSAGE_CREATED
@@ -48,7 +55,7 @@ def yaml_config_helper(config_name, CONFIG):
 
 ## CONFIG
 if "OPENTAXII_CONFIG" in os.environ:
-    log.info("Using config from {}".format(os.environ["OPENTAXII_CONFIG"]))
+    log.debug("Using config from {}".format(os.environ["OPENTAXII_CONFIG"]))
     CONFIG =  yaml.load(open(os.environ["OPENTAXII_CONFIG"], "r"), Loader=Loader)
     # validate dedup and collections and publish
     CONFIG = yaml_config_helper("dedup", CONFIG)
@@ -89,27 +96,23 @@ def post_stix(manager, content_block, collection_ids, service_id):
 
     # make sure collections, if specified are supposed to be sent to 
     if CONFIG["misp"]["collections"] != "UNKNOWN" or CONFIG["misp"]["collections"] == False:
-        log.info("Using collections")
+        log.debug("Using collections")
         should_send_to_misp = False
         collection_names = [collection.name for collection in manager.get_collections(service_id) if collection.id in collection_ids]
         for collection in CONFIG["misp"]["collections"]:
             if collection in collection_names or collection in collection_ids:
-                log.info("Collection specified matches push collection: {}".format(collection))
+                log.debug("Collection specified matches push collection: {}".format(collection))
                 should_send_to_misp = True
                 break
         if should_send_to_misp == False:
-            log.info('''No collections match misp.collections; aborting MISP extraction.
-    Collection ids whitelisted: {}
-    Collection ids sent to: {}
-    Collection names sent to: {}'''.format(
-                CONFIG["misp"]["collections"],
-                collection_ids,
-                collection_names
-            ))
+            log.debug('''No collections match misp.collections; aborting MISP extraction.''')
+            log.debug("Collection ids whitelisted: {}".format(CONFIG["misp"]["collections"]))
+            log.debug("Collection ids sent to: {}".format(collection_ids))
+            log.debug('''Collection names sent to: {}'''.format(collection_names))
             return None
 
     # Load the package
-    log.info("Posting STIX...")
+    log.debug("Posting STIX...")
     block = content_block.content
     if isinstance(block, bytes):
         block = block.decode()
@@ -119,9 +122,10 @@ def post_stix(manager, content_block, collection_ids, service_id):
     except:
         log.error('Could not load stix into MISP format; exiting.')
         return 0
-    log.info("STIX loaded succesfully.")
+    log.debug("STIX loaded succesfully.")
     values = [x.value for x in package.attributes]
-    log.info("Extracted %s", values)
+    log.debug("Extracted %s", values)
+    TOTAL_ATTRIBUTES_ANALYZED = len(values)
 
     # if deduping is enabled, start deduping
     if (
@@ -130,7 +134,7 @@ def post_stix(manager, content_block, collection_ids, service_id):
         CONFIG["misp"]["dedup"] == "UNKNOWN"
     ):
         for attrib in values:
-            log.info("Checking for existence of %s", attrib)
+            log.debug("Checking for existence of %s", attrib)
             search = ''
             if MISP:
                 search = MISP.search("attributes", values=str(attrib))
@@ -139,31 +143,32 @@ def post_stix(manager, content_block, collection_ids, service_id):
             if 'response' in search:
                 if search["response"]["Attribute"] != []:
                     # This means we have it!
-                    log.info("%s is a duplicate, we'll ignore it.", attrib)
+                    log.debug("%s is a duplicate, we'll ignore it.", attrib)
                     package.attributes.pop([x.value for x in package.attributes].index(attrib))
                 else:
-                    log.info("%s is unique, we'll keep it", attrib)
+                    log.debug("%s is unique, we'll keep it", attrib)
             elif 'Attribute' in search:
                 if search["Attribute"] != []:
                     # This means we have it!
-                    log.info("%s is a duplicate, we'll ignore it.", attrib)
+                    log.debug("%s is a duplicate, we'll ignore it.", attrib)
                     package.attributes.pop([x.value for x in package.attributes].index(attrib))
                 else:
-                    log.info("%s is unique, we'll keep it", attrib)
+                    log.debug("%s is unique, we'll keep it", attrib)
             else:
                 log.error("Something went wrong with search, and it doesn't have an 'attribute' or a 'response' key: {}".format(search.keys()))
     else:
-        log.info("Skipping deduplication")
+        log.debug("Skipping deduplication")
 
     # Push the event to MISP
     # TODO: There's probably a proper method to do this rather than json_full
     # But I don't wanna read docs
     if (len(package.attributes) > 0):
-        log.info("Uploading event to MISP with attributes %s", [x.value for x in package.attributes])
+        log.debug("Uploading event to MISP with attributes %s", [x.value for x in package.attributes])
         event = ''
         try:
             if MISP:
                 event = MISP.add_event(package)
+                TOTAL_ATTRIBUTES_SENT = len(package.attributes)
         except ConnectionError:
             log.error("Cannot push to MISP; please ensure that MISP is up and running at {}. Skipping MISP upload.".format(CONFIG['misp']['url']))
         if (
@@ -174,9 +179,10 @@ def post_stix(manager, content_block, collection_ids, service_id):
             if MISP:
                 MISP.publish(event)
         else:
-            log.info("Skipping MISP event publishing")
+            log.debug("Skipping MISP event publishing")
     else:
         log.info("No attributes, not bothering.")
 
+log.debug("total_attributes_analyzed={}, total_attributes_sent={}".format(TOTAL_ATTRIBUTES_ANALYZED, TOTAL_ATTRIBUTES_SENT))
 # Make TAXII call our push function whenever it gets new data
 CONTENT_BLOCK_CREATED.connect(post_stix)
