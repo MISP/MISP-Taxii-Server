@@ -119,7 +119,7 @@ def post_stix(manager, content_block, collection_ids, service_id):
 
     try:
         package = pymisp.tools.stix.load_stix(StringIO(block))
-    except:
+    except Exception:
         log.error('Could not load stix into MISP format; exiting.')
         return 0
     log.debug("STIX loaded succesfully.")
