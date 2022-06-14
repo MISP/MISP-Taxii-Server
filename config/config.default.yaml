@@ -29,6 +29,11 @@ zmq:
 misp:
     url: "http://localhost"
     api: KEY
+    dedup: true
+    collections:
+      - my_collection
+      - my_collection2
+    publish: false
 
 taxii:
     auth:

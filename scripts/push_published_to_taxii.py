@@ -4,6 +4,7 @@ import sys
 import json
 import pymisp
 from pyaml import yaml
+from yaml import Loader
 from cabby import create_client
 from misp_stix_converter.converters import lint_roller
 import logging
@@ -20,7 +21,7 @@ log.setLevel(logging.DEBUG)
 log.info("Starting...")
 # Try to load in config
 if "OPENTAXII_CONFIG" in os.environ:
-    config = yaml.load(open(os.environ["OPENTAXII_CONFIG"], "r"))
+    config = yaml.load(open(os.environ["OPENTAXII_CONFIG"], "r"), Loader=Loader)
 else:
     print("OPENTAXII CONFIG NOT EXPORTED")
     sys.exit()
